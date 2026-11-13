@@ -122,6 +122,13 @@ These numbers are controlled test fixtures, not asserted historical recipes.
 
 #### AC-R5 — R5 / stock_runs_out_mid_order (refused cases only)
 
+Source evidence: physical CSV line 25 (header is line 1), order
+`MO-250307-0024`, contains `scenario_tag=stock_runs_out_mid_order` and
+`stock_runs_out_mid_order=true`. It records refusal and missing `Oatmilk`, but
+does not record menu-time stock, a competing order or reservation timing.
+The initial availability and competing-hold sequence below are a synthetic
+test designed to exercise that tag, not a historical sequence asserted by the CSV.
+
 Input: `MO-250307-0024`, store `SB-10482`, line 1, Grande Iced Brown Sugar
 Oatmilk Shaken Espresso, Oatmilk, Brown Sugar Syrup, quantity 1. First read says
 1 oat-milk unit available, then a competing hold reserves that last unit before
