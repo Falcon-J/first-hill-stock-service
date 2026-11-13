@@ -52,11 +52,17 @@ the decision from trusted store/stock responses, never from a client label.
   MUST NOT accept one item from a larger unfulfillable basket. Return HTTP 409,
   `INSUFFICIENT_QUANTITY`; see **AC-R4**.
 - **R5 — `stock_runs_out_mid_order`:** An earlier successful stock read MUST NOT
-  authorize acceptance or payment. If the atomic all-component hold loses a
+  authorize acceptance or payment. Menu-time availability MUST NOT be treated
+  as a reservation. If the atomic all-component hold loses a
   race and cannot reserve the full basket, the order service MUST refuse the
   entire order and MUST name the lost component. Return HTTP 409,
   `STOCK_CHANGED`; see **AC-R5**. A confirmed, unexpired hold can still succeed
   even when unreserved stock later becomes zero; see **AC-P2**.
+
+  AC-R5 MUST distinguish the refused CSV row `MO-250307-0024` from its designed
+  menu-to-checkout race. AC-P2 MUST distinguish the accepted CSV row
+  `MO-250307-0023` from its designed winning-hold alternative. These fixture
+  sequences MUST NOT be presented as event history recorded by the CSV.
 
 ## Refusal-rule traceability
 

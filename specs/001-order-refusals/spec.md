@@ -174,12 +174,26 @@ all-component hold precedes committed allocation; allocation precedes authorizat
 successful capture precedes HTTP 201 `status: accepted`, an opaque order ID and
 queue spot. Exactly one payment capture and queue entry are created.
 
-**AC-P2:** For accepted race-tag row `MO-250307-0023` (SB-10482, Grande Caffè
-Latte, Oatmilk, quantity 1), this order atomically holds the last oat unit first.
-Another customer sees zero unreserved stock. This order still follows AC-P1
-while the hold remains valid; the race tag alone MUST NOT cause refusal. With
-one unit and two simultaneous new orders, exactly one hold succeeds and the
-other returns AC-R5, with no oversell or charge on the losing order.
+**AC-P2 — Accepted winning-hold alternative:**
+
+**CSV fact:** Order `MO-250307-0023` has `scenario_tag=stock_runs_out_mid_order`,
+`stock_runs_out_mid_order=true`, `expected_outcome=accepted`, and an empty
+`expected_missing_component`. Its input is store `SB-10482`, line 1, Grande
+Caffè Latte, Oatmilk, no add-ins, quantity 1. The CSV does not record the order
+in which reservations occurred.
+
+**Designed test:** Given the store is open, all other required components are
+sufficient and one oat-milk unit is available, this order atomically holds that
+last unit before a competing order. Another customer then sees zero unreserved
+oat milk. This order MUST still follow AC-P1 while its hold is valid: commit
+allocation before payment, capture successfully, and return HTTP 201 with
+`status: accepted`, an order ID and a queue spot. Assert exactly one capture and
+one queue entry for this order. The scenario tag alone MUST NOT cause refusal.
+
+For two simultaneous orders competing for that one unit, exactly one hold MUST
+succeed; the losing order MUST return AC-R5 with no payment request or queue
+entry. Assert no oversell. This winning-hold sequence is a synthetic test that
+matches the accepted source outcome, not event history recorded by the CSV.
 
 ### User Story 3 - Failure and retry do not charge an unfulfillable order (Priority: P2)
 
