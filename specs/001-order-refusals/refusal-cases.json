@@ -1,0 +1,1022 @@
+[
+  {
+    "order_id": "MO-250303-0001",
+    "source_csv_line": 2,
+    "scenario_tag": "store_closed",
+    "rule": "R1",
+    "criterion": "AC-R1",
+    "input": {
+      "idempotency_key": "MO-250303-0001",
+      "store_id": "SB-20516",
+      "submitted_at": "2025-03-03T05:42:08-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Pike Place Roast",
+          "size": "Grande",
+          "milk": "None",
+          "add_ins": [],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": false,
+      "other_required_components": "sufficient for full basket",
+      "store_name": "Bellevue Square",
+      "stock_hold_calls": 0
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STORE_CLOSED",
+      "store_id": "SB-20516",
+      "line_item_number": null,
+      "missing_component": "store_closed",
+      "message": "Bellevue Square is closed right now and can't take mobile orders."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250304-0007",
+    "source_csv_line": 8,
+    "scenario_tag": "base_out_of_stock",
+    "rule": "R2",
+    "criterion": "AC-R2",
+    "input": {
+      "idempotency_key": "MO-250304-0007",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-04T06:41:26-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Caffè Latte",
+          "size": "Grande",
+          "milk": "Almondmilk",
+          "add_ins": [
+            "Vanilla Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Almondmilk",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "BASE_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Almondmilk",
+      "message": "Line 1, Grande Caffè Latte: Almondmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250304-0010",
+    "source_csv_line": 11,
+    "scenario_tag": "base_out_of_stock",
+    "rule": "R2",
+    "criterion": "AC-R2",
+    "input": {
+      "idempotency_key": "MO-250304-0010",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-04T07:33:09-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Matcha Tea Latte",
+          "size": "Grande",
+          "milk": "Almondmilk",
+          "add_ins": [],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Almondmilk",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "BASE_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Almondmilk",
+      "message": "Line 1, Grande Matcha Tea Latte: Almondmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250305-0013",
+    "source_csv_line": 14,
+    "scenario_tag": "store_closed",
+    "rule": "R1",
+    "criterion": "AC-R1",
+    "input": {
+      "idempotency_key": "MO-250305-0013",
+      "store_id": "SB-20516",
+      "submitted_at": "2025-03-05T06:38:20-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Brown Sugar Oatmilk Shaken Espresso",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Brown Sugar Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": false,
+      "other_required_components": "sufficient for full basket",
+      "store_name": "Bellevue Square",
+      "stock_hold_calls": 0
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STORE_CLOSED",
+      "store_id": "SB-20516",
+      "line_item_number": null,
+      "missing_component": "store_closed",
+      "message": "Bellevue Square is closed right now and can't take mobile orders."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250305-0014",
+    "source_csv_line": 15,
+    "scenario_tag": "add_in_out_of_stock",
+    "rule": "R3",
+    "criterion": "AC-R3",
+    "input": {
+      "idempotency_key": "MO-250305-0014",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-05T06:52:47-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Cold Brew",
+          "size": "Venti",
+          "milk": "None",
+          "add_ins": [
+            "Vanilla Sweet Cream Cold Foam"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Vanilla Sweet Cream Cold Foam",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "ADD_IN_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Vanilla Sweet Cream Cold Foam",
+      "message": "Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250306-0019",
+    "source_csv_line": 20,
+    "scenario_tag": "add_in_out_of_stock",
+    "rule": "R3",
+    "criterion": "AC-R3",
+    "input": {
+      "idempotency_key": "MO-250306-0019",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-06T06:46:31-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Caramel Macchiato",
+          "size": "Grande",
+          "milk": "2% Milk",
+          "add_ins": [
+            "Vanilla Syrup",
+            "Caramel Drizzle"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Caramel Drizzle",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "ADD_IN_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Caramel Drizzle",
+      "message": "Line 1, Grande Iced Caramel Macchiato: Caramel Drizzle is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0024",
+    "source_csv_line": 25,
+    "scenario_tag": "stock_runs_out_mid_order",
+    "rule": "R5",
+    "criterion": "AC-R5",
+    "input": {
+      "idempotency_key": "MO-250307-0024",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-07T06:36:42-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Brown Sugar Oatmilk Shaken Espresso",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Brown Sugar Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "initial_available_units": 1,
+      "competing_hold_units_before_our_hold": 1,
+      "available_units_at_our_atomic_hold": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STOCK_CHANGED",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0025",
+    "source_csv_line": 26,
+    "scenario_tag": "stock_runs_out_mid_order",
+    "rule": "R5",
+    "criterion": "AC-R5",
+    "input": {
+      "idempotency_key": "MO-250307-0025",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-07T06:40:19-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Flat White",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Extra Shot"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "initial_available_units": 1,
+      "competing_hold_units_before_our_hold": 1,
+      "available_units_at_our_atomic_hold": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STOCK_CHANGED",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Grande Flat White: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0026",
+    "source_csv_line": 27,
+    "scenario_tag": "stock_runs_out_mid_order",
+    "rule": "R5",
+    "criterion": "AC-R5",
+    "input": {
+      "idempotency_key": "MO-250307-0026",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-07T06:43:55-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Cold Brew",
+          "size": "Venti",
+          "milk": "None",
+          "add_ins": [
+            "Vanilla Sweet Cream Cold Foam",
+            "Vanilla Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Vanilla Sweet Cream Cold Foam",
+      "initial_available_units": 1,
+      "competing_hold_units_before_our_hold": 1,
+      "available_units_at_our_atomic_hold": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STOCK_CHANGED",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Vanilla Sweet Cream Cold Foam",
+      "message": "Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0027",
+    "source_csv_line": 28,
+    "scenario_tag": "stock_runs_out_mid_order",
+    "rule": "R5",
+    "criterion": "AC-R5",
+    "input": {
+      "idempotency_key": "MO-250307-0027",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-07T06:44:38-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Chai Tea Latte",
+          "size": "Venti",
+          "milk": "Oatmilk",
+          "add_ins": [],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "initial_available_units": 1,
+      "competing_hold_units_before_our_hold": 1,
+      "available_units_at_our_atomic_hold": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STOCK_CHANGED",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Venti Chai Tea Latte: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0028",
+    "source_csv_line": 29,
+    "scenario_tag": "insufficient_quantity",
+    "rule": "R4",
+    "criterion": "AC-R4",
+    "input": {
+      "idempotency_key": "MO-250307-0028",
+      "store_id": "SB-11937",
+      "submitted_at": "2025-03-07T06:49:21-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Brown Sugar Oatmilk Shaken Espresso",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Brown Sugar Syrup"
+          ],
+          "quantity": 4
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Brown Sugar Syrup",
+      "recipe_units_per_item": 1,
+      "quantity_on_hand": 3,
+      "reserved_quantity": 0,
+      "required_units": 4
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "INSUFFICIENT_QUANTITY",
+      "store_id": "SB-11937",
+      "line_item_number": 1,
+      "missing_component": "Brown Sugar Syrup",
+      "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown Sugar Syrup is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0029",
+    "source_csv_line": 30,
+    "scenario_tag": "base_out_of_stock",
+    "rule": "R2",
+    "criterion": "AC-R2",
+    "input": {
+      "idempotency_key": "MO-250307-0029",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-07T07:03:12-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Brown Sugar Oatmilk Shaken Espresso",
+          "size": "Venti",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Brown Sugar Syrup",
+            "Extra Shot"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "BASE_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Venti Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0030",
+    "source_csv_line": 31,
+    "scenario_tag": "insufficient_quantity",
+    "rule": "R4",
+    "criterion": "AC-R4",
+    "input": {
+      "idempotency_key": "MO-250307-0030",
+      "store_id": "SB-11937",
+      "submitted_at": "2025-03-07T07:16:50-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Cold Brew",
+          "size": "Grande",
+          "milk": "None",
+          "add_ins": [
+            "Brown Sugar Syrup"
+          ],
+          "quantity": 3
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Brown Sugar Syrup",
+      "recipe_units_per_item": 1,
+      "quantity_on_hand": 2,
+      "reserved_quantity": 0,
+      "required_units": 3
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "INSUFFICIENT_QUANTITY",
+      "store_id": "SB-11937",
+      "line_item_number": 1,
+      "missing_component": "Brown Sugar Syrup",
+      "message": "Line 1, Grande Cold Brew: Brown Sugar Syrup is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250307-0031",
+    "source_csv_line": 32,
+    "scenario_tag": "base_out_of_stock",
+    "rule": "R2",
+    "criterion": "AC-R2",
+    "input": {
+      "idempotency_key": "MO-250307-0031",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-07T07:38:04-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Matcha Tea Latte",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "BASE_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Grande Matcha Tea Latte: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250308-0033",
+    "source_csv_line": 34,
+    "scenario_tag": "base_out_of_stock",
+    "rule": "R2",
+    "criterion": "AC-R2",
+    "input": {
+      "idempotency_key": "MO-250308-0033",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-08T07:12:46-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Caffè Latte",
+          "size": "Venti",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Vanilla Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "BASE_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Venti Caffè Latte: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250308-0034",
+    "source_csv_line": 35,
+    "scenario_tag": "store_closed",
+    "rule": "R1",
+    "criterion": "AC-R1",
+    "input": {
+      "idempotency_key": "MO-250308-0034",
+      "store_id": "SB-20516",
+      "submitted_at": "2025-03-08T08:01:29-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Caramel Frappuccino",
+          "size": "Grande",
+          "milk": "Whole Milk",
+          "add_ins": [
+            "Caramel Drizzle"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": false,
+      "other_required_components": "sufficient for full basket",
+      "store_name": "Bellevue Square",
+      "stock_hold_calls": 0
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STORE_CLOSED",
+      "store_id": "SB-20516",
+      "line_item_number": null,
+      "missing_component": "store_closed",
+      "message": "Bellevue Square is closed right now and can't take mobile orders."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250308-0035",
+    "source_csv_line": 36,
+    "scenario_tag": "add_in_out_of_stock",
+    "rule": "R3",
+    "criterion": "AC-R3",
+    "input": {
+      "idempotency_key": "MO-250308-0035",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-08T08:19:58-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Vanilla Sweet Cream Cold Brew",
+          "size": "Venti",
+          "milk": "None",
+          "add_ins": [
+            "Vanilla Sweet Cream Cold Foam"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Vanilla Sweet Cream Cold Foam",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "ADD_IN_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Vanilla Sweet Cream Cold Foam",
+      "message": "Line 1, Venti Vanilla Sweet Cream Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250309-0037",
+    "source_csv_line": 38,
+    "scenario_tag": "base_out_of_stock",
+    "rule": "R2",
+    "criterion": "AC-R2",
+    "input": {
+      "idempotency_key": "MO-250309-0037",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-09T07:06:24-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Brown Sugar Oatmilk Shaken Espresso",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Brown Sugar Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Oatmilk",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "BASE_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Oatmilk",
+      "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250309-0038",
+    "source_csv_line": 39,
+    "scenario_tag": "add_in_out_of_stock",
+    "rule": "R3",
+    "criterion": "AC-R3",
+    "input": {
+      "idempotency_key": "MO-250309-0038",
+      "store_id": "SB-11937",
+      "submitted_at": "2025-03-09T07:29:51-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Iced Brown Sugar Oatmilk Shaken Espresso",
+          "size": "Venti",
+          "milk": "Oatmilk",
+          "add_ins": [
+            "Brown Sugar Syrup"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Brown Sugar Syrup",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "ADD_IN_OUT_OF_STOCK",
+      "store_id": "SB-11937",
+      "line_item_number": 1,
+      "missing_component": "Brown Sugar Syrup",
+      "message": "Line 1, Venti Iced Brown Sugar Oatmilk Shaken Espresso: Brown Sugar Syrup is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250309-0039",
+    "source_csv_line": 40,
+    "scenario_tag": "add_in_out_of_stock",
+    "rule": "R3",
+    "criterion": "AC-R3",
+    "input": {
+      "idempotency_key": "MO-250309-0039",
+      "store_id": "SB-10482",
+      "submitted_at": "2025-03-09T08:11:35-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Caramel Frappuccino",
+          "size": "Venti",
+          "milk": "Whole Milk",
+          "add_ins": [
+            "Caramel Drizzle"
+          ],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": true,
+      "other_required_components": "sufficient for full basket",
+      "component": "Caramel Drizzle",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "required_units": 1
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "ADD_IN_OUT_OF_STOCK",
+      "store_id": "SB-10482",
+      "line_item_number": 1,
+      "missing_component": "Caramel Drizzle",
+      "message": "Line 1, Venti Caramel Frappuccino: Caramel Drizzle is unavailable at this store right now."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  },
+  {
+    "order_id": "MO-250309-0040",
+    "source_csv_line": 41,
+    "scenario_tag": "store_closed",
+    "rule": "R1",
+    "criterion": "AC-R1",
+    "input": {
+      "idempotency_key": "MO-250309-0040",
+      "store_id": "SB-20516",
+      "submitted_at": "2025-03-09T19:54:12-08:00",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Flat White",
+          "size": "Grande",
+          "milk": "Whole Milk",
+          "add_ins": [],
+          "quantity": 1
+        }
+      ]
+    },
+    "authoritative_fixture": {
+      "provenance": "Synthetic preconditions for this scenario; not historical inventory facts.",
+      "store_open": false,
+      "other_required_components": "sufficient for full basket",
+      "store_name": "Bellevue Square",
+      "stock_hold_calls": 0
+    },
+    "expected_http_status": 409,
+    "expected_body": {
+      "status": "refused",
+      "code": "STORE_CLOSED",
+      "store_id": "SB-20516",
+      "line_item_number": null,
+      "missing_component": "store_closed",
+      "message": "Bellevue Square is closed right now and can't take mobile orders."
+    },
+    "expected_side_effects": {
+      "payment_provider_calls": 0,
+      "captured_amount": 0,
+      "accepted_orders": 0,
+      "queue_entries": 0,
+      "retained_partial_holds": 0
+    }
+  }
+]
