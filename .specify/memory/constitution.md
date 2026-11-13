@@ -59,6 +59,8 @@ An atomic basket reservation MUST publish all required component holds or none.
 On failure, tentative changes MUST be discarded without altering another
 order's committed reservations; compensating release of published partial
 holds MUST NOT be described as an atomic full-basket reservation.
+Rollback acceptance criteria MUST name numeric committed-state baselines and
+post-failure totals, and distinguish source values from synthetic overrides.
 
 ## Development Workflow and Quality Gates
 
@@ -82,4 +84,4 @@ or incompatible principles; minor for new principles; patch for clarifications.
 Any exception MUST be explicit, reviewed and recorded with an expiry and owner;
 no exception can permit payment before a confirmed stock reservation.
 
-**Version**: 1.0.3 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
+**Version**: 1.0.4 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14

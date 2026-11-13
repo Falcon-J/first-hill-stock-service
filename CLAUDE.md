@@ -71,6 +71,9 @@ the decision from trusted store/stock responses, never from a client label.
   allocations and prove neither becomes a committed partial hold. After the
   failure, their committed reservation totals MUST be unchanged, and the
   winner's oat-milk hold MUST retain its original ID, owner and quantity.
+  The concrete AC-R5 fixture MUST assert committed reserved totals of syrup
+  **2 -> 2** and espresso **4 -> 4**, using the cited snapshot baselines while
+  explicitly labelling its oat-milk race stock as a synthetic override.
 
 ## Refusal-rule traceability
 

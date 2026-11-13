@@ -151,6 +151,19 @@ committed reservation totals before the losing request. Exercise an internal
 reservation attempt that tentatively stages syrup and espresso before finding
 that the oat-milk unit is already reserved by the winner.
 
+Seed committed reserved totals at `SB-10482` to **2 syrup units** and **4 espresso
+units** before the losing request. These baselines are copied from stock
+snapshot store `10482`: physical CSV line 6, `brown_sugar_syrup`, on hand 64,
+reserved 2; and line 2, `espresso_signature`, on hand 142, reserved 4 (header
+counted as line 1). Those existing reservations belong to other orders. The
+fixture's one oat-milk unit is a synthetic override: the actual snapshot oat
+row at line 3 has on hand 0 and reserved 0 and cannot itself replay this race.
+
+| Committed reserved total | Before losing request | After refusal |
+|---|---:|---:|
+| Brown Sugar Syrup | 2 | 2 |
+| Signature Espresso Roast | 4 | 4 |
+
 Under the atomic full-basket rule, those syrup/espresso changes MUST remain
 uncommitted and MUST NOT be exposed as successful partial holds. When oat milk
 fails, discard both tentative changes. Assert that the loser owns no hold for
