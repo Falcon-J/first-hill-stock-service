@@ -1,0 +1,79 @@
+{
+  "checked_at": "2026-11-13T18:20:44.1902097Z",
+  "base_url": "http://127.0.0.1:8000",
+  "rule": "max(0, quantity_on_hand - reserved_quantity)",
+  "pytest": "15 passed",
+  "milks": [
+    {
+      "store_id": "10482",
+      "store_name": "First Hill - Madison & Boylston",
+      "store_open": true,
+      "component_id": "oat_milk",
+      "component_name": "Oatmilk",
+      "component_type": "drink_base",
+      "quantity_on_hand": 0,
+      "reserved_quantity": 0,
+      "available_quantity": 0,
+      "sold_out": true,
+      "orderable": false,
+      "last_updated_at": "2025-03-07T20:05:00+05:30"
+    },
+    {
+      "store_id": "10482",
+      "store_name": "First Hill - Madison & Boylston",
+      "store_open": true,
+      "component_id": "almond_milk",
+      "component_name": "Almondmilk",
+      "component_type": "drink_base",
+      "quantity_on_hand": 38,
+      "reserved_quantity": 1,
+      "available_quantity": 37,
+      "sold_out": false,
+      "orderable": true,
+      "last_updated_at": "2025-03-07T20:11:05+05:30"
+    },
+    {
+      "store_id": "10482",
+      "store_name": "First Hill - Madison & Boylston",
+      "store_open": true,
+      "component_id": "two_pct_milk",
+      "component_name": "2% Milk",
+      "component_type": "drink_base",
+      "quantity_on_hand": 96,
+      "reserved_quantity": 3,
+      "available_quantity": 93,
+      "sold_out": false,
+      "orderable": true,
+      "last_updated_at": "2025-03-07T20:13:40+05:30"
+    }
+  ],
+  "oat_milk": {
+    "store_id": "10482",
+    "store_name": "First Hill - Madison & Boylston",
+    "store_open": true,
+    "component_id": "oat_milk",
+    "component_name": "Oatmilk",
+    "component_type": "drink_base",
+    "quantity_on_hand": 0,
+    "reserved_quantity": 0,
+    "available_quantity": 0,
+    "sold_out": true,
+    "orderable": false,
+    "last_updated_at": "2025-03-07T20:05:00+05:30"
+  },
+  "espresso_control": {
+    "store_id": "10482",
+    "store_name": "First Hill - Madison & Boylston",
+    "store_open": true,
+    "component_id": "espresso_signature",
+    "component_name": "Signature Espresso Roast",
+    "component_type": "drink_base",
+    "quantity_on_hand": 142,
+    "reserved_quantity": 4,
+    "available_quantity": 138,
+    "sold_out": false,
+    "orderable": true,
+    "last_updated_at": "2025-03-07T20:12:18+05:30"
+  },
+  "check_line": "PASS: First Hill 10482 oat_milk=0 sold_out=true; almond_milk=37; two_pct_milk=93; espresso_signature=138. All 30 snapshot rows match API."
+}
