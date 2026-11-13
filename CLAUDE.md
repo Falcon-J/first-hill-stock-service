@@ -63,6 +63,10 @@ the decision from trusted store/stock responses, never from a client label.
   menu-to-checkout race. AC-P2 MUST distinguish the accepted CSV row
   `MO-250307-0023` from its designed winning-hold alternative. These fixture
   sequences MUST NOT be presented as event history recorded by the CSV.
+  AC-P2's ordering assertion MUST exercise the full AC-P1 sequence for the same
+  race order `MO-250307-0023` at `SB-10482`, including zero payment requests
+  before its confirmed hold and committed allocation. A passing test for the
+  different store/order in AC-P1 MUST NOT substitute for this race-order test.
 
 ## Refusal-rule traceability
 

@@ -195,6 +195,16 @@ succeed; the losing order MUST return AC-R5 with no payment request or queue
 entry. Assert no oversell. This winning-hold sequence is a synthetic test that
 matches the accepted source outcome, not event history recorded by the CSV.
 
+**AC-P2 ordering assertion (same race order and store):** AC-P1's complete
+sequence also applies to `MO-250307-0023` at `SB-10482`, not only to
+`MO-250303-0002` at `SB-11937`. In AC-P2's designed winning-hold fixture, record
+events for `MO-250307-0023` and assert this strict order: confirmed full-basket
+hold -> committed allocation -> payment authorization -> successful capture ->
+HTTP 201 accepted response with an opaque order ID and queue spot. Before the
+confirmed hold and committed allocation, payment-provider request count MUST
+remain zero. Assert exactly one capture and one queue entry for this same order.
+These are required future contract-test assertions, not claimed executed tests.
+
 ### User Story 3 - Failure and retry do not charge an unfulfillable order (Priority: P2)
 
 **AC-E1 (expired hold):** Hold created at T, expires at T+120 seconds; no payment
