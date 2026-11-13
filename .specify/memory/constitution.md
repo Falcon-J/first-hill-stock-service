@@ -61,6 +61,8 @@ order's committed reservations; compensating release of published partial
 holds MUST NOT be described as an atomic full-basket reservation.
 Rollback acceptance criteria MUST name numeric committed-state baselines and
 post-failure totals, and distinguish source values from synthetic overrides.
+Reviewers MUST be able to identify those assertions directly within the
+criterion, rather than inferring them from a narrative or an external message.
 
 ## Development Workflow and Quality Gates
 

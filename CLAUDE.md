@@ -74,6 +74,9 @@ the decision from trusted store/stock responses, never from a client label.
   The concrete AC-R5 fixture MUST assert committed reserved totals of syrup
   **2 -> 2** and espresso **4 -> 4**, using the cited snapshot baselines while
   explicitly labelling its oat-milk race stock as a synthetic override.
+  Check the explicit numeric reservation assertions at the start of AC-R5:
+  `brown_sugar_syrup.reserved_quantity == 2` and
+  `espresso_signature.reserved_quantity == 4` both before and after refusal.
 
 ## Refusal-rule traceability
 

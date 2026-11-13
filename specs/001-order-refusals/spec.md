@@ -122,6 +122,13 @@ These numbers are controlled test fixtures, not asserted historical recipes.
 
 #### AC-R5 — R5 / stock_runs_out_mid_order (refused cases only)
 
+**Numeric reservation assertions at SB-10482:** Before the losing request,
+`brown_sugar_syrup.reserved_quantity == 2` and
+`espresso_signature.reserved_quantity == 4`. After HTTP 409 refusal, assert
+`brown_sugar_syrup.reserved_quantity == 2` and
+`espresso_signature.reserved_quantity == 4` again. These are committed totals;
+the losing request MUST add zero committed reserved units to either component.
+
 **Part 1 — CSV fact:** Physical CSV line 25 (header is line 1), order
 `MO-250307-0024`, contains exactly:
 
