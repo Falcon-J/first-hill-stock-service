@@ -67,6 +67,10 @@ the decision from trusted store/stock responses, never from a client label.
   race order `MO-250307-0023` at `SB-10482`, including zero payment requests
   before its confirmed hold and committed allocation. A passing test for the
   different store/order in AC-P1 MUST NOT substitute for this race-order test.
+  AC-R5's rollback fixture MUST name the loser's tentative syrup and espresso
+  allocations and prove neither becomes a committed partial hold. After the
+  failure, their committed reservation totals MUST be unchanged, and the
+  winner's oat-milk hold MUST retain its original ID, owner and quantity.
 
 ## Refusal-rule traceability
 

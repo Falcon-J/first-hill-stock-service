@@ -55,6 +55,10 @@ read, not a reservation or permission to take payment at checkout.
 Reserve-before-payment ordering MUST be asserted for the same order and store
 used in each accepted race criterion; another store's successful-order test
 MUST NOT substitute for that assertion.
+An atomic basket reservation MUST publish all required component holds or none.
+On failure, tentative changes MUST be discarded without altering another
+order's committed reservations; compensating release of published partial
+holds MUST NOT be described as an atomic full-basket reservation.
 
 ## Development Workflow and Quality Gates
 
@@ -78,4 +82,4 @@ or incompatible principles; minor for new principles; patch for clarifications.
 Any exception MUST be explicit, reviewed and recorded with an expiry and owner;
 no exception can permit payment before a confirmed stock reservation.
 
-**Version**: 1.0.2 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
+**Version**: 1.0.3 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14

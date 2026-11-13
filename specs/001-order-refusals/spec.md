@@ -143,6 +143,24 @@ checkout hold, another order reserves that last unit. At checkout, available
 oat milk is 0 (on hand 1 minus reserved 1); all other required components remain
 sufficient.
 
+**Concrete rollback fixture:** For this test only, resolve the basket to one
+test-unit each of `brown_sugar_syrup` (Brown Sugar Syrup), `espresso_signature`
+(Signature Espresso Roast) and `oat_milk` (Oatmilk). These are synthetic recipe
+units, not quantities or reservation events recorded in the CSV. Capture the
+committed reservation totals before the losing request. Exercise an internal
+reservation attempt that tentatively stages syrup and espresso before finding
+that the oat-milk unit is already reserved by the winner.
+
+Under the atomic full-basket rule, those syrup/espresso changes MUST remain
+uncommitted and MUST NOT be exposed as successful partial holds. When oat milk
+fails, discard both tentative changes. Assert that the loser owns no hold for
+any of the three components, and that committed syrup and espresso reservation
+totals equal their pre-attempt values. Assert that the winner still owns its
+one oat-milk unit and that its reservation ID, owner and quantity are unchanged.
+There is no interval in which a committed partial basket is promised to the
+loser; any implementation that validates everything before staging writes MUST
+produce the same unchanged committed state on this failure.
+
 When the customer submits `MO-250307-0024`: line 1, Grande Iced Brown Sugar
 Oatmilk Shaken Espresso, milk Oatmilk, add-in Brown Sugar Syrup, quantity 1,
 the atomic full-basket hold MUST fail and the order service MUST return HTTP
