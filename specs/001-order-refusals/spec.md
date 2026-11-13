@@ -122,23 +122,49 @@ These numbers are controlled test fixtures, not asserted historical recipes.
 
 #### AC-R5 — R5 / stock_runs_out_mid_order (refused cases only)
 
-Source evidence: physical CSV line 25 (header is line 1), order
-`MO-250307-0024`, contains `scenario_tag=stock_runs_out_mid_order` and
-`stock_runs_out_mid_order=true`. It records refusal and missing `Oatmilk`, but
-does not record menu-time stock, a competing order or reservation timing.
-The initial availability and competing-hold sequence below are a synthetic
-test designed to exercise that tag, not a historical sequence asserted by the CSV.
+**Part 1 — CSV fact:** Physical CSV line 25 (header is line 1), order
+`MO-250307-0024`, contains exactly:
 
-Input: `MO-250307-0024`, store `SB-10482`, line 1, Grande Iced Brown Sugar
-Oatmilk Shaken Espresso, Oatmilk, Brown Sugar Syrup, quantity 1. First read says
-1 oat-milk unit available, then a competing hold reserves that last unit before
-this order's atomic hold. Expected: HTTP 409, `STOCK_CHANGED`, missing `Oatmilk`,
-line 1, message `Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-Oatmilk is unavailable at this store right now.` Repeat the other three R5
-refusals, including foam loss in `MO-250307-0026`. The all-component hold MUST
-roll back, no payment request occurs, and `stock_conflict` telemetry increments
-exactly once per distinct attempt with order ID, store ID and missing component
-and no payment secret.
+```text
+scenario_tag: stock_runs_out_mid_order
+stock_runs_out_mid_order: true
+expected_outcome: refused
+expected_missing_component: Oatmilk
+```
+
+The CSV does not record menu-time stock, a competing order or reservation timing.
+
+**Part 2 — Designed race and expected refusal:** This is a synthetic test
+designed to match that tag, not a historical sequence recorded by the CSV.
+
+Given store `SB-10482` is open and the menu-time stock read reports 1 available
+oat-milk unit, this customer has not yet reserved it. Before this customer's
+checkout hold, another order reserves that last unit. At checkout, available
+oat milk is 0 (on hand 1 minus reserved 1); all other required components remain
+sufficient.
+
+When the customer submits `MO-250307-0024`: line 1, Grande Iced Brown Sugar
+Oatmilk Shaken Espresso, milk Oatmilk, add-in Brown Sugar Syrup, quantity 1,
+the atomic full-basket hold MUST fail and the order service MUST return HTTP
+**409** with this exact body:
+
+```json
+{
+  "status": "refused",
+  "code": "STOCK_CHANGED",
+  "store_id": "SB-10482",
+  "line_item_number": 1,
+  "missing_component": "Oatmilk",
+  "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now."
+}
+```
+
+Assert zero payment-provider requests, zero captured amount, zero accepted
+orders, zero queue entries and zero retained partial holds for this order.
+The competing order's reservation MUST remain intact. Increment `stock_conflict`
+exactly once per distinct attempt, recording order ID, store ID and missing
+component without payment secrets. Repeat the other three R5 refused cases
+from `refusal-cases.json`, including foam loss in `MO-250307-0026`.
 
 ### User Story 2 - A secured, fulfilable basket can complete (Priority: P1)
 
