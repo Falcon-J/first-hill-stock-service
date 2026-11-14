@@ -2,10 +2,9 @@ openapi: 3.1.1
 info:
   title: Store stock service
   version: 1.0.0-draft
-  description: Sole owner of quantity_on_hand, reserved_quantity, store_open, recipes
-    and all fulfilability decisions. No caller DB credentials/replicas or authoritative
-    caches. POS/feed changes participate in final confirmation. All mutations are
-    atomic and idempotent.
+  description: Sole owner of quantity_on_hand, reserved_quantity, store_open, recipes and all
+    fulfilability decisions. No caller DB credentials/replicas or authoritative caches. POS/feed
+    changes participate in final confirmation. All mutations are atomic and idempotent.
 servers:
 - url: http://localhost
   description: Development only; production service addresses are deployment configuration.
@@ -84,19 +83,21 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '409':
-          description: Nonretryable business refusal/conflict. No stock refusal after
-            payment capture.
+          description: Nonretryable business refusal/conflict. No stock refusal after payment
+            capture. A verified menu-available basket that loses stock at checkout/confirmation
+            MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only
+            to their own conditions. Tests supply authoritative race state and enforce variant
+            selection.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/BusinessRefusalEnvelope'
               examples:
                 store_closed:
                   value:
                     error:
                       code: STORE_CLOSED
-                      message: Bellevue Square is closed right now and can't take
-                        mobile orders.
+                      message: Bellevue Square is closed right now and can't take mobile orders.
                       line_item_number: null
                       missing_component: store_closed
                       details:
@@ -109,8 +110,8 @@ paths:
                   value:
                     error:
                       code: BASE_OUT_OF_STOCK
-                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable
-                        at this store right now.'
+                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable at this
+                        store right now.'
                       line_item_number: 1
                       missing_component: Almondmilk
                       details:
@@ -123,8 +124,8 @@ paths:
                   value:
                     error:
                       code: ADD_IN_OUT_OF_STOCK
-                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold
-                        Foam is unavailable at this store right now.'
+                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable
+                        at this store right now.'
                       line_item_number: 1
                       missing_component: Vanilla Sweet Cream Cold Foam
                       details:
@@ -137,8 +138,8 @@ paths:
                   value:
                     error:
                       code: STOCK_CHANGED
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Oatmilk is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk
+                        is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Oatmilk
                       details:
@@ -151,8 +152,8 @@ paths:
                   value:
                     error:
                       code: INSUFFICIENT_QUANTITY
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Brown Sugar Syrup is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown
+                        Sugar Syrup is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Brown Sugar Syrup
                       details:
@@ -182,8 +183,8 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '503':
-          description: Pre-payment dependency failure, not a sold-out business refusal.
-            Retry original key only.
+          description: Pre-payment dependency failure, not a sold-out business refusal. Retry
+            original key only.
           content:
             application/json:
               schema:
@@ -233,8 +234,8 @@ paths:
       - in: header
         name: Idempotency-Key
         required: true
-        description: Owner-scoped immutable attempt key; same payload replays, changed
-          payload conflicts; tombstone >=24h.
+        description: Owner-scoped immutable attempt key; same payload replays, changed payload
+          conflicts; tombstone >=24h.
         schema:
           type: string
           minLength: 1
@@ -291,19 +292,21 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '409':
-          description: Nonretryable business refusal/conflict. No stock refusal after
-            payment capture.
+          description: Nonretryable business refusal/conflict. No stock refusal after payment
+            capture. A verified menu-available basket that loses stock at checkout/confirmation
+            MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only
+            to their own conditions. Tests supply authoritative race state and enforce variant
+            selection.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/BusinessRefusalEnvelope'
               examples:
                 store_closed:
                   value:
                     error:
                       code: STORE_CLOSED
-                      message: Bellevue Square is closed right now and can't take
-                        mobile orders.
+                      message: Bellevue Square is closed right now and can't take mobile orders.
                       line_item_number: null
                       missing_component: store_closed
                       details:
@@ -316,8 +319,8 @@ paths:
                   value:
                     error:
                       code: BASE_OUT_OF_STOCK
-                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable
-                        at this store right now.'
+                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable at this
+                        store right now.'
                       line_item_number: 1
                       missing_component: Almondmilk
                       details:
@@ -330,8 +333,8 @@ paths:
                   value:
                     error:
                       code: ADD_IN_OUT_OF_STOCK
-                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold
-                        Foam is unavailable at this store right now.'
+                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable
+                        at this store right now.'
                       line_item_number: 1
                       missing_component: Vanilla Sweet Cream Cold Foam
                       details:
@@ -344,8 +347,8 @@ paths:
                   value:
                     error:
                       code: STOCK_CHANGED
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Oatmilk is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk
+                        is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Oatmilk
                       details:
@@ -358,8 +361,8 @@ paths:
                   value:
                     error:
                       code: INSUFFICIENT_QUANTITY
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Brown Sugar Syrup is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown
+                        Sugar Syrup is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Brown Sugar Syrup
                       details:
@@ -389,8 +392,8 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '503':
-          description: Pre-payment dependency failure, not a sold-out business refusal.
-            Retry original key only.
+          description: Pre-payment dependency failure, not a sold-out business refusal. Retry
+            original key only.
           content:
             application/json:
               schema:
@@ -510,19 +513,21 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '409':
-          description: Nonretryable business refusal/conflict. No stock refusal after
-            payment capture.
+          description: Nonretryable business refusal/conflict. No stock refusal after payment
+            capture. A verified menu-available basket that loses stock at checkout/confirmation
+            MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only
+            to their own conditions. Tests supply authoritative race state and enforce variant
+            selection.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/BusinessRefusalEnvelope'
               examples:
                 store_closed:
                   value:
                     error:
                       code: STORE_CLOSED
-                      message: Bellevue Square is closed right now and can't take
-                        mobile orders.
+                      message: Bellevue Square is closed right now and can't take mobile orders.
                       line_item_number: null
                       missing_component: store_closed
                       details:
@@ -535,8 +540,8 @@ paths:
                   value:
                     error:
                       code: BASE_OUT_OF_STOCK
-                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable
-                        at this store right now.'
+                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable at this
+                        store right now.'
                       line_item_number: 1
                       missing_component: Almondmilk
                       details:
@@ -549,8 +554,8 @@ paths:
                   value:
                     error:
                       code: ADD_IN_OUT_OF_STOCK
-                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold
-                        Foam is unavailable at this store right now.'
+                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable
+                        at this store right now.'
                       line_item_number: 1
                       missing_component: Vanilla Sweet Cream Cold Foam
                       details:
@@ -563,8 +568,8 @@ paths:
                   value:
                     error:
                       code: STOCK_CHANGED
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Oatmilk is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk
+                        is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Oatmilk
                       details:
@@ -577,8 +582,8 @@ paths:
                   value:
                     error:
                       code: INSUFFICIENT_QUANTITY
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Brown Sugar Syrup is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown
+                        Sugar Syrup is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Brown Sugar Syrup
                       details:
@@ -608,8 +613,8 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '503':
-          description: Pre-payment dependency failure, not a sold-out business refusal.
-            Retry original key only.
+          description: Pre-payment dependency failure, not a sold-out business refusal. Retry
+            original key only.
           content:
             application/json:
               schema:
@@ -709,19 +714,21 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '409':
-          description: Nonretryable business refusal/conflict. No stock refusal after
-            payment capture.
+          description: Nonretryable business refusal/conflict. No stock refusal after payment
+            capture. A verified menu-available basket that loses stock at checkout/confirmation
+            MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only
+            to their own conditions. Tests supply authoritative race state and enforce variant
+            selection.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/BusinessRefusalEnvelope'
               examples:
                 store_closed:
                   value:
                     error:
                       code: STORE_CLOSED
-                      message: Bellevue Square is closed right now and can't take
-                        mobile orders.
+                      message: Bellevue Square is closed right now and can't take mobile orders.
                       line_item_number: null
                       missing_component: store_closed
                       details:
@@ -734,8 +741,8 @@ paths:
                   value:
                     error:
                       code: BASE_OUT_OF_STOCK
-                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable
-                        at this store right now.'
+                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable at this
+                        store right now.'
                       line_item_number: 1
                       missing_component: Almondmilk
                       details:
@@ -748,8 +755,8 @@ paths:
                   value:
                     error:
                       code: ADD_IN_OUT_OF_STOCK
-                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold
-                        Foam is unavailable at this store right now.'
+                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable
+                        at this store right now.'
                       line_item_number: 1
                       missing_component: Vanilla Sweet Cream Cold Foam
                       details:
@@ -762,8 +769,8 @@ paths:
                   value:
                     error:
                       code: STOCK_CHANGED
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Oatmilk is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk
+                        is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Oatmilk
                       details:
@@ -776,8 +783,8 @@ paths:
                   value:
                     error:
                       code: INSUFFICIENT_QUANTITY
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Brown Sugar Syrup is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown
+                        Sugar Syrup is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Brown Sugar Syrup
                       details:
@@ -807,8 +814,8 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '503':
-          description: Pre-payment dependency failure, not a sold-out business refusal.
-            Retry original key only.
+          description: Pre-payment dependency failure, not a sold-out business refusal. Retry
+            original key only.
           content:
             application/json:
               schema:
@@ -833,8 +840,8 @@ paths:
   /v1/reservations/{reservation_id}/confirm:
     post:
       operationId: confirmReservation
-      summary: Recheck current hours and physical stock including POS/feed changes;
-        pin allocation before payment.
+      summary: Recheck current hours and physical stock including POS/feed changes; pin allocation
+        before payment.
       parameters:
       - in: header
         name: X-Request-ID
@@ -853,8 +860,8 @@ paths:
       - in: header
         name: Idempotency-Key
         required: true
-        description: Owner-scoped immutable attempt key; same payload replays, changed
-          payload conflicts; tombstone >=24h.
+        description: Owner-scoped immutable attempt key; same payload replays, changed payload
+          conflicts; tombstone >=24h.
         schema:
           type: string
           minLength: 1
@@ -917,19 +924,21 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '409':
-          description: Nonretryable business refusal/conflict. No stock refusal after
-            payment capture.
+          description: Nonretryable business refusal/conflict. No stock refusal after payment
+            capture. A verified menu-available basket that loses stock at checkout/confirmation
+            MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only
+            to their own conditions. Tests supply authoritative race state and enforce variant
+            selection.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/BusinessRefusalEnvelope'
               examples:
                 store_closed:
                   value:
                     error:
                       code: STORE_CLOSED
-                      message: Bellevue Square is closed right now and can't take
-                        mobile orders.
+                      message: Bellevue Square is closed right now and can't take mobile orders.
                       line_item_number: null
                       missing_component: store_closed
                       details:
@@ -942,8 +951,8 @@ paths:
                   value:
                     error:
                       code: BASE_OUT_OF_STOCK
-                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable
-                        at this store right now.'
+                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable at this
+                        store right now.'
                       line_item_number: 1
                       missing_component: Almondmilk
                       details:
@@ -956,8 +965,8 @@ paths:
                   value:
                     error:
                       code: ADD_IN_OUT_OF_STOCK
-                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold
-                        Foam is unavailable at this store right now.'
+                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable
+                        at this store right now.'
                       line_item_number: 1
                       missing_component: Vanilla Sweet Cream Cold Foam
                       details:
@@ -970,8 +979,8 @@ paths:
                   value:
                     error:
                       code: STOCK_CHANGED
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Oatmilk is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk
+                        is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Oatmilk
                       details:
@@ -984,8 +993,8 @@ paths:
                   value:
                     error:
                       code: INSUFFICIENT_QUANTITY
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Brown Sugar Syrup is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown
+                        Sugar Syrup is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Brown Sugar Syrup
                       details:
@@ -1015,8 +1024,8 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '503':
-          description: Pre-payment dependency failure, not a sold-out business refusal.
-            Retry original key only.
+          description: Pre-payment dependency failure, not a sold-out business refusal. Retry
+            original key only.
           content:
             application/json:
               schema:
@@ -1033,8 +1042,8 @@ paths:
                       retryable: true
                     request_id: req-contract-1
         '200':
-          description: Idempotent confirmed allocation; own on-hand/reserved units
-            consumed once.
+          description: Idempotent confirmed allocation; own on-hand/reserved units consumed
+            once.
           content:
             application/json:
               schema:
@@ -1042,8 +1051,7 @@ paths:
   /v1/reservations/{reservation_id}/release:
     post:
       operationId: releaseReservation
-      summary: Release only this owner/order hold; restore unpaid confirmed allocation
-        once.
+      summary: Release only this owner/order hold; restore unpaid confirmed allocation once.
       parameters:
       - in: header
         name: X-Request-ID
@@ -1062,8 +1070,8 @@ paths:
       - in: header
         name: Idempotency-Key
         required: true
-        description: Owner-scoped immutable attempt key; same payload replays, changed
-          payload conflicts; tombstone >=24h.
+        description: Owner-scoped immutable attempt key; same payload replays, changed payload
+          conflicts; tombstone >=24h.
         schema:
           type: string
           minLength: 1
@@ -1126,19 +1134,21 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '409':
-          description: Nonretryable business refusal/conflict. No stock refusal after
-            payment capture.
+          description: Nonretryable business refusal/conflict. No stock refusal after payment
+            capture. A verified menu-available basket that loses stock at checkout/confirmation
+            MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only
+            to their own conditions. Tests supply authoritative race state and enforce variant
+            selection.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/BusinessRefusalEnvelope'
               examples:
                 store_closed:
                   value:
                     error:
                       code: STORE_CLOSED
-                      message: Bellevue Square is closed right now and can't take
-                        mobile orders.
+                      message: Bellevue Square is closed right now and can't take mobile orders.
                       line_item_number: null
                       missing_component: store_closed
                       details:
@@ -1151,8 +1161,8 @@ paths:
                   value:
                     error:
                       code: BASE_OUT_OF_STOCK
-                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable
-                        at this store right now.'
+                      message: 'Line 1, Grande Caffè Latte: Almondmilk is unavailable at this
+                        store right now.'
                       line_item_number: 1
                       missing_component: Almondmilk
                       details:
@@ -1165,8 +1175,8 @@ paths:
                   value:
                     error:
                       code: ADD_IN_OUT_OF_STOCK
-                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold
-                        Foam is unavailable at this store right now.'
+                      message: 'Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable
+                        at this store right now.'
                       line_item_number: 1
                       missing_component: Vanilla Sweet Cream Cold Foam
                       details:
@@ -1179,8 +1189,8 @@ paths:
                   value:
                     error:
                       code: STOCK_CHANGED
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Oatmilk is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk
+                        is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Oatmilk
                       details:
@@ -1193,8 +1203,8 @@ paths:
                   value:
                     error:
                       code: INSUFFICIENT_QUANTITY
-                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso:
-                        Brown Sugar Syrup is unavailable at this store right now.'
+                      message: 'Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown
+                        Sugar Syrup is unavailable at this store right now.'
                       line_item_number: 1
                       missing_component: Brown Sugar Syrup
                       details:
@@ -1224,8 +1234,8 @@ paths:
                       retryable: false
                     request_id: req-contract-1
         '503':
-          description: Pre-payment dependency failure, not a sold-out business refusal.
-            Retry original key only.
+          description: Pre-payment dependency failure, not a sold-out business refusal. Retry
+            original key only.
           content:
             application/json:
               schema:
@@ -1242,8 +1252,7 @@ paths:
                       retryable: true
                     request_id: req-contract-1
         '200':
-          description: Idempotent released state; terminal expiry also releases reserved
-            units.
+          description: Idempotent released state; terminal expiry also releases reserved units.
           content:
             application/json:
               schema:
@@ -1355,8 +1364,8 @@ components:
         message:
           type: string
           minLength: 1
-          description: Product-owned, human-readable text; examples are fixtures,
-            not fixed copy.
+          description: Product-owned, human-readable text; examples are fixtures, not fixed
+            copy.
         line_item_number:
           type:
           - integer
@@ -1415,9 +1424,8 @@ components:
         availability_token:
           type: string
           minLength: 1
-          description: Optional opaque inventory-issued menu decision token. It is
-            not a hold; inventory validates binding/expiry and still checks current
-            stock.
+          description: Optional opaque inventory-issued menu decision token. It is not a hold;
+            inventory validates binding/expiry and still checks current stock.
       required:
       - store_id
       - items
@@ -1551,9 +1559,8 @@ components:
         availability_token:
           type: string
           minLength: 1
-          description: Optional inventory-issued evidence of an earlier available
-            menu decision, bound to store and basket. Never a client availability
-            claim or permission to reserve.
+          description: Optional inventory-issued evidence of an earlier available menu decision,
+            bound to store and basket. Never a client availability claim or permission to reserve.
       required:
       - order_id
       - basket
@@ -1577,8 +1584,8 @@ components:
         availability_token:
           type: string
           minLength: 1
-          description: Opaque, signed/unguessable, store/basket-bound inventory decision
-            token; expires after 120s and reserves nothing.
+          description: Opaque, signed/unguessable, store/basket-bound inventory decision token;
+            expires after 120s and reserves nothing.
       required:
       - store_id
       - available
@@ -1603,6 +1610,65 @@ components:
           properties:
             failures:
               maxItems: 0
+    StockChangedEnvelope:
+      description: Required variant when a previously available basket loses stock at checkout
+        or final confirmation. Select using authoritative inventory state, never client claims.
+      allOf:
+      - $ref: '#/components/schemas/ErrorEnvelope'
+      - type: object
+        properties:
+          error:
+            type: object
+            properties:
+              code:
+                const: STOCK_CHANGED
+              retryable:
+                const: false
+              line_item_number:
+                type: integer
+                minimum: 1
+              missing_component:
+                type: string
+                minLength: 1
+              details:
+                type: array
+                minItems: 1
+                prefixItems:
+                - type: object
+                  properties:
+                    code:
+                      const: STOCK_CHANGED
+                    line_item_number:
+                      type: integer
+                      minimum: 1
+                    missing_component:
+                      type: string
+                      minLength: 1
+                items:
+                  $ref: '#/components/schemas/FailureDetail'
+    OtherBusinessRefusalEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/ErrorEnvelope'
+      - type: object
+        properties:
+          error:
+            type: object
+            properties:
+              code:
+                enum:
+                - STORE_CLOSED
+                - BASE_OUT_OF_STOCK
+                - ADD_IN_OUT_OF_STOCK
+                - INSUFFICIENT_QUANTITY
+                - RESERVATION_EXPIRED
+                - IDEMPOTENCY_CONFLICT
+                - INVALID_RESERVATION_STATE
+              retryable:
+                const: false
+    BusinessRefusalEnvelope:
+      oneOf:
+      - $ref: '#/components/schemas/StockChangedEnvelope'
+      - $ref: '#/components/schemas/OtherBusinessRefusalEnvelope'
 x-reservation-lifecycle:
   initial: reserved
   terminal:
@@ -1611,17 +1677,17 @@ x-reservation-lifecycle:
   - expired
   ttl_seconds: 120
   expiry_boundary: now >= expires_at
-  confirmation: Recheck current store_open and physical stock under inventory transaction,
-    then consume own quantities exactly once.
-  release: Owner-only. No restoration after successful capture; unknown capture outcome
-    retains confirmed allocation for reconciliation.
+  confirmation: Recheck current store_open and physical stock under inventory transaction, then
+    consume own quantities exactly once.
+  release: Owner-only. No restoration after successful capture; unknown capture outcome retains
+    confirmed allocation for reconciliation.
   idempotency_retention_seconds: 86400
   renewal: false
 x-data-owner: store-stock-service
-x-errors: 'Primary failure: store-wide first, then lowest line number and lexical
-  component ID. Include all failures in sorted details.'
-x-menu-decision-token: An earlier available menu decision may be conveyed by an optional
-  stock-issued token, bound to the canonical store/basket and valid for 120s. If validated
-  and the reserve now loses stock, return STOCK_CHANGED. Without prior available evidence,
-  a zero component uses its base/add-in code. Tokens never bypass the current check,
-  and expired tokens cannot authorize a hold.
+x-errors: 'Primary failure: store-wide first, then lowest line number and lexical component
+  ID. Include all failures in sorted details.'
+x-menu-decision-token: An earlier available menu decision may be conveyed by an optional stock-issued
+  token, bound to the canonical store/basket and valid for 120s. If validated and the reserve
+  now loses stock, return STOCK_CHANGED. Without prior available evidence, a zero component
+  uses its base/add-in code. Tokens never bypass the current check, and expired tokens cannot
+  authorize a hold.

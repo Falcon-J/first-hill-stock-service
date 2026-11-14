@@ -135,6 +135,17 @@ those keys. Legacy apps still display error.message. Product owns message copy;
 schemas require a nonempty string, not an enum of marketing text. Source CSV
 messages remain exact test fixtures, not text hard-coded into every service.
 
+Every 409 schema references BusinessRefusalEnvelope, a oneOf with named variants.
+StockChangedEnvelope constrains error.code to const STOCK_CHANGED, retryable to
+const false, and requires a non-null positive line, nonempty missing component
+and matching details. OtherBusinessRefusalEnvelope excludes STOCK_CHANGED.
+For authoritative menu-available/checkout-gone state, the operation requires the
+StockChanged variant. JSON Schema validates the response shape; it cannot infer
+the inventory precondition from request JSON. Race provider tests select that
+named schema and assert the exact fixture response, so another legitimate 409
+code is still a contract failure for this scenario. Negative document tests prove
+the named schema rejects a different code, retryable=true and a null component.
+
 Choose an additive details array for multiple failures. The primary reason is
 store-wide closure first; otherwise lowest line number then lexical component
 ID. Details use that same deterministic order. Top-level error line/component

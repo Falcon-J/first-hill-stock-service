@@ -64,6 +64,25 @@ def test_legacy_error_envelope_and_machine_readable_details(name):
     assert 'enum' not in schemas['Error']['properties']['message']
 
 
+@pytest.mark.parametrize('name', NAMES)
+@pytest.mark.parametrize('field,value',[('code','INSUFFICIENT_QUANTITY'),('retryable',True),('missing_component',None)])
+def test_mid_order_schema_rejects_wrong_variant_fields(name,field,value):
+    import copy
+    from jsonschema import Draft202012Validator, ValidationError
+    document=contract(name)
+    cases=json.loads((ROOT/'contracts/refusal-cases.json').read_text(encoding='utf-8'))
+    body=copy.deepcopy(next(case['expected_body'] for case in cases if case['order_id']=='MO-250307-0024'))
+    schema={'$ref':'#/components/schemas/StockChangedEnvelope','components':document['components']}
+    validator=Draft202012Validator(schema)
+    validator.validate(body)
+    body['error'][field]=value
+    with pytest.raises(ValidationError): validator.validate(body)
+    for item in document['paths'].values():
+        for operation in item.values():
+            if isinstance(operation,dict) and '409' in operation.get('responses',{}):
+                assert operation['responses']['409']['content']['application/json']['schema']=={'$ref':'#/components/schemas/BusinessRefusalEnvelope'}
+
+
 def test_all_source_refusals_have_exact_compatible_contract_examples():
     source = json.loads((ROOT / 'specs/001-order-refusals/refusal-cases.json').read_text(encoding='utf-8'))
     cases = json.loads((ROOT / 'contracts/refusal-cases.json').read_text(encoding='utf-8'))

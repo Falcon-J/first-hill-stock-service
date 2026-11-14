@@ -73,6 +73,14 @@ def assert_held(response):
     return body
 
 
+def assert_stock_changed_variant(body,service='stock-service'):
+    import yaml
+    from jsonschema import Draft202012Validator
+    document=yaml.safe_load((ROOT/'contracts'/f'{service}.openapi.yaml').read_text(encoding='utf-8'))
+    Draft202012Validator({'$ref':'#/components/schemas/StockChangedEnvelope',
+        'components':document['components']}).validate(body)
+
+
 def test_stock_atomic_race_and_ownership_safe_rollback():
     client = stock_provider()
     start = Barrier(2)
@@ -175,6 +183,7 @@ def test_stock_menu_read_is_not_a_hold_and_token_does_not_hide_checkout_loss():
     assert response.json()['error']['code']=='STOCK_CHANGED'
     assert response.json()['error']['line_item_number']==1
     assert response.json()['error']['missing_component']=='Oatmilk'
+    assert_stock_changed_variant(response.json())
     snapshot=client.app.state.inventory.snapshot('SB-10482')
     assert snapshot['brown_sugar_syrup']['reserved_quantity']==2
     assert snapshot['espresso_signature']['reserved_quantity']==4
@@ -237,6 +246,7 @@ def test_order_refuses_each_sample_without_payment_or_queue(case):
     response=client.post('/v1/orders',headers=headers(case['order_id'],case['expected_body']['request_id']),json=request)
     assert response.status_code==409
     assert response.json()==case['expected_body']
+    if case['rule']=='R5': assert_stock_changed_variant(response.json(),'order-service')
     assert not any(event[0] in {'payment','queue'} for event in events)
     assert response.json()['error']['retryable'] is False
 
@@ -359,6 +369,7 @@ def test_gateway_preserves_refusal_and_deadline(case):
     supplied['X-Request-Deadline']='2099-01-01T00:00:00Z'  # Must not extend budget.
     response=client.post('/v1/orders',headers=supplied,json=request)
     assert response.status_code==409 and response.json()==case['expected_body']
+    if case['rule']=='R5': assert_stock_changed_variant(response.json(),'gateway')
     assert len(seen)==1
 
 
