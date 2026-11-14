@@ -4,6 +4,16 @@ Read `.specify/memory/constitution.md` and `specs/001-order-refusals/spec.md`
 before changing a service. This file governs future implementation; this commit
 adds specifications only and does not claim the order service exists.
 
+For the service-boundary draft, read `specs/002-service-contracts/plan.md` and
+the three `contracts/*.openapi.yaml` files. The owning-team review supersedes
+the earlier flat refusal wire shape: preserve `{error: {code, message},
+request_id}` and add line/component/details inside error. Older flat JSON stays
+source acceptance evidence; it MUST NOT be emitted as the new public response.
+Only stock decides fulfilability/recipes/current open state; order sends the
+original basket and MUST NOT calculate a decision from raw stock counts. Gateway
+routes/translates only. All public paths MUST start /v1 and the end-to-end order
+budget MUST remain 3 seconds including every stock/payment call and retry.
+
 ## Three mandatory engineering rules
 
 1. **Fixed OpenAPI contracts.** Every gateway, order and stock endpoint MUST

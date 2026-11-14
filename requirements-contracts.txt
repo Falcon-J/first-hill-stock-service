@@ -1,0 +1,4 @@
+-r requirements.txt
+PyYAML>=6,<7
+jsonschema>=4.20,<5
+openapi-spec-validator>=0.7,<0.9
