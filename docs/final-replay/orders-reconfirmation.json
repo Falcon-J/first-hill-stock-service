@@ -1,0 +1,92 @@
+{
+  "resource_title": "Held-out Mobile Orders for Final Replay (10 March 2025)",
+  "fresh_sha256": "6c1d31093e11fea50a59b6bd800ca176fdd6dd7d10b509e2e875e9bdc8a1f46d",
+  "loaded_sha256": "6c1d31093e11fea50a59b6bd800ca176fdd6dd7d10b509e2e875e9bdc8a1f46d",
+  "byte_identical": true,
+  "source_rows": 40,
+  "order_store_ids": [
+    "STB-10342",
+    "STB-10358",
+    "STB-10417",
+    "STB-10466",
+    "STB-10503",
+    "STB-10529",
+    "STB-10588",
+    "STB-10611"
+  ],
+  "snapshot_store_ids": [
+    "STB-10342",
+    "STB-10518",
+    "STB-10877",
+    "STB-11203",
+    "STB-11456"
+  ],
+  "store_10342_rows": [
+    {
+      "store_id": "STB-10342",
+      "store_name": "Capitol Hill - Broadway & Pine",
+      "store_open": "true",
+      "component_id": "CMP-101",
+      "component_name": "2% milk",
+      "component_type": "milk",
+      "quantity_on_hand": "64",
+      "reserved_quantity": "9",
+      "last_updated_at": "2025-03-10T06:44:12-07:00"
+    },
+    {
+      "store_id": "STB-10342",
+      "store_name": "Capitol Hill - Broadway & Pine",
+      "store_open": "true",
+      "component_id": "CMP-104",
+      "component_name": "oat milk",
+      "component_type": "milk",
+      "quantity_on_hand": "0",
+      "reserved_quantity": "0",
+      "last_updated_at": "2025-03-10T06:44:51-07:00"
+    },
+    {
+      "store_id": "STB-10342",
+      "store_name": "Capitol Hill - Broadway & Pine",
+      "store_open": "true",
+      "component_id": "CMP-201",
+      "component_name": "espresso",
+      "component_type": "base",
+      "quantity_on_hand": "118",
+      "reserved_quantity": "22",
+      "last_updated_at": "2025-03-10T06:43:37-07:00"
+    },
+    {
+      "store_id": "STB-10342",
+      "store_name": "Capitol Hill - Broadway & Pine",
+      "store_open": "true",
+      "component_id": "CMP-301",
+      "component_name": "brown sugar syrup",
+      "component_type": "syrup",
+      "quantity_on_hand": "41",
+      "reserved_quantity": "6",
+      "last_updated_at": "2025-03-10T06:41:05-07:00"
+    },
+    {
+      "store_id": "STB-10342",
+      "store_name": "Capitol Hill - Broadway & Pine",
+      "store_open": "true",
+      "component_id": "CMP-302",
+      "component_name": "vanilla syrup",
+      "component_type": "syrup",
+      "quantity_on_hand": "37",
+      "reserved_quantity": "4",
+      "last_updated_at": "2025-03-10T06:41:05-07:00"
+    },
+    {
+      "store_id": "STB-10342",
+      "store_name": "Capitol Hill - Broadway & Pine",
+      "store_open": "true",
+      "component_id": "CMP-402",
+      "component_name": "vanilla sweet cream cold foam",
+      "component_type": "topping",
+      "quantity_on_hand": "18",
+      "reserved_quantity": "3",
+      "last_updated_at": "2025-03-10T06:42:48-07:00"
+    }
+  ]
+}

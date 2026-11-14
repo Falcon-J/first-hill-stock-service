@@ -3,6 +3,8 @@
 Review baseline: `e4a250a9f0dc8508de949d1bea717e94e21f73d7` (previous-stage submission).
 
 Resubmission update: the original source matcher exceeded the task. `mismatch_reasons` now compares only expected_outcome and expected_missing_component. Schema/correlation/details/no-charge checks run separately. The exact-message/per-line-text blocker is closed; source strings remain diagnostics. The named March 10 resource was reopened and freshly downloaded after feedback, confirming the same five store IDs and same loaded SHA-256, with no prefix-only discrepancy (`snapshot-reconfirmation.json`).
+
+Second review follow-up: the named held-out orders resource was also reopened and freshly downloaded. Its hash and eight store IDs equal the loaded orders CSV. `both-inputs-confirmed.md` places both resource ID lists side by side, enumerates all six STB-10342 components with counts, explains why the missing drink bases are not aliases, and checks neighbouring row 0251's explicit STB-10503 audit against its raw CI response. Both input copies are confirmed; the source-pair/ingredient gaps remain unresolved.
 Rules read: `CLAUDE.md`, constitution, `specs/002-service-contracts/plan.md` and the owning-team review. Decisions below are mine, based on those rules; a green old sample replay is not final holdout evidence.
 
 | Finding / place inspected | Decision | Reason and evidence |
