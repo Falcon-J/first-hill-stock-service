@@ -1,0 +1,31 @@
+store_id,store_name,store_open,component_id,component_name,component_type,quantity_on_hand,reserved_quantity,last_updated_at
+STB-10342,Capitol Hill - Broadway & Pine,true,CMP-101,2% milk,milk,64,9,2025-03-10T06:44:12-07:00
+STB-10342,Capitol Hill - Broadway & Pine,true,CMP-104,oat milk,milk,0,0,2025-03-10T06:44:51-07:00
+STB-10342,Capitol Hill - Broadway & Pine,true,CMP-201,espresso,base,118,22,2025-03-10T06:43:37-07:00
+STB-10342,Capitol Hill - Broadway & Pine,true,CMP-301,brown sugar syrup,syrup,41,6,2025-03-10T06:41:05-07:00
+STB-10342,Capitol Hill - Broadway & Pine,true,CMP-302,vanilla syrup,syrup,37,4,2025-03-10T06:41:05-07:00
+STB-10342,Capitol Hill - Broadway & Pine,true,CMP-402,vanilla sweet cream cold foam,topping,18,3,2025-03-10T06:42:48-07:00
+STB-10518,Ballard - Market St,true,CMP-101,2% milk,milk,72,11,2025-03-10T06:39:20-07:00
+STB-10518,Ballard - Market St,true,CMP-102,almond milk,milk,19,5,2025-03-10T06:39:20-07:00
+STB-10518,Ballard - Market St,true,CMP-104,oat milk,milk,26,4,2025-03-10T06:40:02-07:00
+STB-10518,Ballard - Market St,true,CMP-201,espresso,base,96,17,2025-03-10T06:38:44-07:00
+STB-10518,Ballard - Market St,true,CMP-302,vanilla syrup,syrup,5,3,2025-03-10T06:43:16-07:00
+STB-10518,Ballard - Market St,true,CMP-401,caramel drizzle,topping,0,0,2025-03-10T06:37:58-07:00
+STB-10877,South Lake Union - Westlake Ave,true,CMP-101,2% milk,milk,58,7,2025-03-10T06:36:31-07:00
+STB-10877,South Lake Union - Westlake Ave,true,CMP-104,oat milk,milk,12,9,2025-03-10T06:44:27-07:00
+STB-10877,South Lake Union - Westlake Ave,true,CMP-201,espresso,base,104,31,2025-03-10T06:44:27-07:00
+STB-10877,South Lake Union - Westlake Ave,true,CMP-202,cold brew,base,33,28,2025-03-10T06:42:10-07:00
+STB-10877,South Lake Union - Westlake Ave,true,CMP-203,chai concentrate,base,21,4,2025-03-10T06:35:49-07:00
+STB-10877,South Lake Union - Westlake Ave,true,CMP-301,brown sugar syrup,syrup,2,0,2025-03-10T06:40:53-07:00
+STB-11203,Bellevue - NE 8th St,true,CMP-101,2% milk,milk,81,14,2025-03-10T06:33:18-07:00
+STB-11203,Bellevue - NE 8th St,true,CMP-104,oat milk,milk,47,6,2025-03-10T06:33:18-07:00
+STB-11203,Bellevue - NE 8th St,true,CMP-201,espresso,base,120,26,2025-03-10T06:38:02-07:00
+STB-11203,Bellevue - NE 8th St,true,CMP-202,cold brew,base,44,8,2025-03-10T06:34:40-07:00
+STB-11203,Bellevue - NE 8th St,true,CMP-204,strawberry açaí base,base,7,5,2025-03-10T06:41:39-07:00
+STB-11203,Bellevue - NE 8th St,true,CMP-402,vanilla sweet cream cold foam,topping,9,7,2025-03-10T06:43:55-07:00
+STB-11456,Fremont - N 34th St,false,CMP-101,2% milk,milk,95,0,2025-03-10T06:21:14-07:00
+STB-11456,Fremont - N 34th St,false,CMP-104,oat milk,milk,88,0,2025-03-10T06:21:14-07:00
+STB-11456,Fremont - N 34th St,false,CMP-201,espresso,base,112,0,2025-03-10T06:20:37-07:00
+STB-11456,Fremont - N 34th St,false,CMP-203,chai concentrate,base,30,0,2025-03-10T06:22:06-07:00
+STB-11456,Fremont - N 34th St,false,CMP-301,brown sugar syrup,syrup,54,0,2025-03-10T06:20:37-07:00
+STB-11456,Fremont - N 34th St,false,CMP-401,caramel drizzle,topping,39,0,2025-03-10T06:22:06-07:00
