@@ -9,7 +9,7 @@
 
 The source has 40 **line rows**, grouped into **28 orders**, across eight store IDs. The 30-row snapshot contains five stores. Only STB-10342 overlaps, covering six order lines. `summary.json` gives the exact sets and hashes. No original value was rewritten.
 
-## Actual replay
+## Actual baseline replay (a7a6fd5, before the narrow catalogue adapter)
 
 `checks/final_replay.py` submits each complete basket to the real Docker gateway on localhost:18083. Gateway calls order, and order calls stock over HTTP. Stock alone mounts and loads the supplied CSV. No source expected outcome/tag/message enters a service request. There are no per-scenario stock overrides, guessed aliases or expected-answer providers.
 
@@ -47,8 +47,14 @@ CI output is exclusively a fresh untracked `final-replay-results/` directory, wi
 
 The normal demo project was removed, including its two development volumes; all three images were rebuilt with `docker compose build --no-cache`, then started with `up --detach --wait`. `rebuilt-containers.jsonl` records three newly created running/healthy services. `local-final-containers.jsonl` records the separate final-source stack. These are local observations, not GitHub run artifacts.
 
-`audit.md` lists every service and changed boundary with an explicit keep/fix decision. The stage leaves production code, OpenAPI contracts, specs and CLAUDE.md unchanged. A ready-for-review PR invites review of the evidence and input blockers; it is not merge approval or a claim of 40/40.
+`audit.md` lists every service and changed boundary with an explicit keep/fix decision. The subsequent narrow adapter changes only stock-owned catalogue resolution/category interpretation among runtime services. Order/gateway code, OpenAPI contracts, specs and CLAUDE.md remain unchanged. A ready-for-review PR invites review of the evidence and input blockers; it is not merge approval or a claim of 40/40.
 
 Local verification: 85 frozen contracts passed; two new parsing/whole-basket tests passed; Ruff passed. The first full local run returned 1 failed/147 passed while Docker built; a second returned the same counts with a different old sample case hitting the three-second deadline. Their raw reports are saved as local diagnostics. Neither run is described as green, and no deadline/assertion was relaxed. See the PR's linked latest Actions run for current validation on that commit.
 
 After stopping local proof containers, the full suite passed **148 tests in 118.40s**. Comparator coverage was subsequently expanded: all six final-replay helper tests pass, including wrong-code/line/envelope/correlation rejection and complete matching positive cases. Current CI, rather than the earlier 148-test run, is the evidence for the expanded full suite.
+
+## Subsequent bounded fix
+
+As requested in manager review, inventory now accepts registered spellings for the existing oat-drink recipes and maps their ingredient identities to unique compatible component names within that same store. It uses the supplied oat 0/0 unchanged, rather than allowing validation to hide the shortage. Provider tests now return 409 BASE_OUT_OF_STOCK for 0209 and 0624 with no hold or count mutation. Unsupported recipes and stores stay refused. The API message wording remains frozen and still differs from the final source text; these two rows are not declared exact matches. Five initial adapter cases plus six replay-input/matcher cases and 85 frozen contracts passed together (96 tests). A sixth adapter regression then preserved the existing UNKNOWN_ITEM result for missing recipe components; all 12 final cases passed in 3.33s. See `catalogue-gap.md` for before/after proof and the PR's latest run for the fresh gateway replay.
+
+Final local implementation verification: **158 passed in 92.83s**, Ruff green; raw output is `local-tests-adapter.txt`. The full suite includes the frozen contracts and new compatibility regressions. This green service suite does not turn the separate holdout's unresolved source mismatches into passes.

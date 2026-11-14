@@ -9,7 +9,7 @@ import secrets
 import sqlite3
 from threading import RLock
 
-from .catalogue import COMPONENTS, demo_recipe, recipe_key
+from .catalogue import COMPONENTS, demo_recipe, recipe_key, component_type
 
 
 class Refusal(Exception):
@@ -125,7 +125,7 @@ class Inventory:
                 if recipe is None:
                     if recipes:  # Injected catalogues are authoritative, not partial guessed data.
                         raise ValueError('Unknown recipe')
-                    recipe = demo_recipe(line)
+                    recipe = demo_recipe(line, self.components(basket['store_id']))
             except ValueError:
                 raise Refusal('INVALID_ORDER', 422, 'Provide a valid store, basket, and idempotency key.') from None
             for component, units in recipe.items():
@@ -148,7 +148,7 @@ class Inventory:
             shortage = row['quantity_on_hand'] < row['reserved_quantity'] if confirming else available < allocation['units']
             if shortage:
                 name, kind = COMPONENTS.get(component, (component, 'drink_base'))
-                name, kind = row.get('component_name', name), row.get('component_type', kind)
+                name, kind = row.get('component_name', name), component_type(row.get('component_type', kind))
                 code = 'STOCK_CHANGED' if changed else ('INSUFFICIENT_QUANTITY' if available > 0 else
                     'ADD_IN_OUT_OF_STOCK' if kind == 'add_in' else 'BASE_OUT_OF_STOCK')
                 failed.append((min(allocation['line_item_numbers']), component,

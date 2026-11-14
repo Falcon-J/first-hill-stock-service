@@ -15,14 +15,18 @@
 
 ## Tasks
 
-- [ ] Save both source CSVs unchanged with hashes and source names.
-- [ ] Remove only this project's development containers/volumes, build all three images with `--no-cache`, start from Compose and record three healthy services.
-- [ ] Run all frozen contracts, full pytest and lint; preserve output.
-- [ ] Add a strict final replay runner and an isolated three-service Compose configuration. Mount source only into stock. Send grouped baskets through gateway, record one result per original CSV line and owner-scoped side-effect counts. Return nonzero on any mismatch.
-- [ ] Run replay on GitHub on every push; publish failure reports even when the strict gate is red. Do not hide mismatches with skips, xfail or continue-on-error.
-- [ ] Audit stock, order and gateway plus every stage diff boundary; list evidence and keep/fix decisions, including unresolved input dependencies.
+- [x] Save both source CSVs unchanged with hashes and source names.
+- [x] Remove only this project's development containers/volumes, build all three images with `--no-cache`, start from Compose and record three healthy services.
+- [x] Run all frozen contracts, full pytest and lint; preserve output. Corrected implementation: 158 passed in 92.83s, Ruff green.
+- [x] Add a strict final replay runner and an isolated three-service Compose configuration. Mount source only into stock. Send grouped baskets through gateway, record one result per original CSV line and owner-scoped side-effect counts. Return nonzero on any mismatch.
+- [x] Run replay on GitHub on every push; publish failure reports even when the strict gate is red. Do not hide mismatches with skips, xfail or continue-on-error.
+- [x] Audit stock, order and gateway plus every stage diff boundary; list evidence and keep/fix decisions, including unresolved input dependencies.
 - [ ] Update existing PR with actual result, links, decisions, key prompt and two checked claims. Ready for human review does not mean approved for merge; missing feed and any red check remain explicit blockers.
 
 ## Review focus
 
 Unknown stores must remain 404; missing recipe components must fail closed; multi-line orders must stay whole baskets; expected source labels must never reach a runtime service; refused or uncertain orders must have zero payment and outbox records.
+
+## Manager-requested bounded implementation
+
+Amara requested that the two known oat drinks reach their actual zero-stock row instead of being masked by validation. Added explicit stock-owned spelling/name/category resolution for existing recipes only, with red-to-green regressions, ambiguous-match and duplicate-add-in rejection, and preservation of UNKNOWN_ITEM for genuinely missing components. No store, component count, recipe unit demand, frozen contract or source expectation changes. Final exact replay remains blocked pending the matching owner feed/catalogue/events and whole-basket message clarification; see audit and source-decision documents.
