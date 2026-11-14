@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import hashlib
 import hmac
 import os
+import sqlite3
 from typing import Annotated
 
 from fastapi import FastAPI, Request
@@ -88,8 +89,13 @@ def create_app(initial_state=None, clock=None, authenticate=None, storage_path=N
         async def sweep():
             while True:
                 await asyncio.sleep(1)
-                with inventory.transaction():
-                    pass
+                try:
+                    with inventory.transaction():
+                        pass
+                except sqlite3.Error:
+                    # Another worker may hold the write lock. Keep the sweeper
+                    # alive; requests fail closed until storage is available.
+                    continue
         task = asyncio.create_task(sweep())
         try:
             yield
@@ -114,6 +120,11 @@ def create_app(initial_state=None, clock=None, authenticate=None, storage_path=N
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request, error):
         return await refusal_handler(request, invalid())
+
+    @app.exception_handler(sqlite3.Error)
+    async def storage_unavailable(request, error):
+        return await refusal_handler(request, Refusal('STOCK_CHECK_UNAVAILABLE', 503,
+            "We can't confirm this store's stock right now. Please try again."))
 
     @app.middleware('http')
     async def authenticate_request(request, call_next):

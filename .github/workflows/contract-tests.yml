@@ -27,12 +27,20 @@ jobs:
           docker compose up --build --detach --wait --wait-timeout 180
       - name: Observe real gateway refusal
         run: python scripts/demo_gateway.py --output gateway-demo.json
+      - name: Start isolated multi-worker overselling stack
+        run: docker compose -p first-hill-overselling -f compose.overselling.yaml up --build --detach --wait --wait-timeout 180
+      - name: Prove socket race and replay all 40 orders
+        run: python -m pytest checks/live_overselling.py -q --junitxml=overselling-results.xml
       - name: Record container HTTP calls
         if: always()
-        run: docker compose logs --no-color > compose-calls.log
+        run: |
+          docker compose logs --no-color > compose-calls.log
+          docker compose -p first-hill-overselling -f compose.overselling.yaml logs --no-color > overselling-calls.log
       - name: Stop CI containers
         if: always()
-        run: docker compose down
+        run: |
+          docker compose -p first-hill-overselling -f compose.overselling.yaml down
+          docker compose down
       - name: Publish contract results even when assertions fail
         if: always()
         uses: actions/upload-artifact@v4
@@ -48,3 +56,8 @@ jobs:
           path: |
             gateway-demo.json
             compose-calls.log
+            overselling-calls.log
+            overselling-results.xml
+            docs/overselling/live-race.json
+            docs/overselling/live-replay-results.csv
+            docs/overselling/live-stock-outage.json

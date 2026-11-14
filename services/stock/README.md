@@ -17,11 +17,19 @@ indefinitely (at least 24 hours). Menu tokens are opaque random, owner/basket-bo
 expire after 120 seconds and never reserve stock. Holds expire on access plus a
 one-second background sweep while the application lifespan is active.
 
-This demo requires **one process / one worker** per state file: the lock serializes
-requests and feed updates within that process; it is not a multi-instance database
-transaction design. Use a transactional inventory database before scaling out.
+The default container starts one worker. Correctness now also holds across stock
+workers using the **same inventory-owned SQLite file**: BEGIN IMMEDIATE acquires
+the write lock before loading state, checking quantities and publishing all holds.
+The local RLock protects a connection; the SQLite transaction coordinates workers.
+Separate inventory copies or independent volumes are not a single authority.
+Keep this database on a local durable volume; multi-host storage is not claimed.
 Back up the private volume and keep the service identity stable across restarts.
 Without a configured file, a restart loses state and is unsuitable for real orders.
+
+If stock dies before commit, the transaction rolls back. A committed hold survives
+in inventory_state.payload.reservations with its public.expires_at timestamp;
+restart/on-access expiry releases unconfirmed holds at their original 120-second
+boundary. Confirmed allocations do not expire during payment uncertainty.
 
 `app.state.inventory.snapshot(store_id)` is an inventory-owner inspection seam.
 `apply_feed(store_id, changes)` is a trusted in-process adapter seam, never an HTTP

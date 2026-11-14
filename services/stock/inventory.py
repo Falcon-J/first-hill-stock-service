@@ -1,4 +1,4 @@
-"""Serialized full-basket transactions and optional stock-private SQLite storage."""
+"""Full-basket transactions serialized by the stock owner's durable database."""
 import copy
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -38,36 +38,63 @@ class Inventory:
         if storage_path:
             path = Path(storage_path)
             path.parent.mkdir(parents=True, exist_ok=True)
-            self.connection = sqlite3.connect(path, check_same_thread=False)
+            self.connection = sqlite3.connect(path, check_same_thread=False, isolation_level=None, timeout=1)
             self.connection.execute('PRAGMA journal_mode=WAL')
             self.connection.execute('PRAGMA synchronous=FULL')
             self.connection.execute('CREATE TABLE IF NOT EXISTS inventory_state (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL)')
-            row = self.connection.execute('SELECT payload FROM inventory_state WHERE id=1').fetchone()
-            if row:
-                self.data = json.loads(row[0])
-            else:
-                self.save()
+            # Seeding must not overwrite a reservation committed by another worker
+            # between its initial SELECT and our first write.
+            self.connection.execute('BEGIN IMMEDIATE')
+            try:
+                row = self.connection.execute('SELECT payload FROM inventory_state WHERE id=1').fetchone()
+                if row:
+                    self.data = json.loads(row[0])
+                else:
+                    self.save()
+                self.connection.commit()
+            except BaseException:
+                self.connection.rollback()
+                raise
 
     def save(self):
         if self.connection:
-            with self.connection:
-                self.connection.execute('INSERT OR REPLACE INTO inventory_state VALUES (1, ?)', (canonical(self.data),))
+            if not self.connection.in_transaction:
+                raise RuntimeError('Inventory writes require the owner transaction')
+            self.connection.execute('INSERT OR REPLACE INTO inventory_state VALUES (1, ?)', (canonical(self.data),))
 
     @contextmanager
     def transaction(self):
         with self.lock:
             backup = copy.deepcopy(self.data)
             try:
-                self.expire()
-                yield
-                self.save()
+                if self.connection:
+                    self.connection.execute('BEGIN IMMEDIATE')
+                    # Reload and decoding must also be inside rollback protection:
+                    # an I/O failure here must not retain the writer lock.
+                    row = self.connection.execute('SELECT payload FROM inventory_state WHERE id=1').fetchone()
+                    self.data = json.loads(row[0])
+                    backup = copy.deepcopy(self.data)
+                try:
+                    self.expire()
+                    yield
+                except Refusal:
+                    # Expiry and a failed confirmation's release commit together.
+                    self.save()
+                    if self.connection:
+                        self.connection.commit()
+                    raise
+                else:
+                    self.save()
+                    if self.connection:
+                        self.connection.commit()
             except Refusal:
-                # A refusal can atomically release a failed confirmation or expire a hold.
-                self.save()
                 raise
             except BaseException:
                 self.data = backup
                 raise
+            finally:
+                if self.connection and self.connection.in_transaction:
+                    self.connection.rollback()
 
     def resolve_store(self, store_id):
         store_id = self.data['state'].get('aliases', {}).get(store_id, store_id)
