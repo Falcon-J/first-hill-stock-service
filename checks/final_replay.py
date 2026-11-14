@@ -17,7 +17,8 @@ import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from checks.final_replay_support import load_inputs, order_payload, mismatch_reasons  # noqa: E402
+from checks.final_replay_support import (load_inputs, order_payload, mismatch_reasons,
+                                        observed_outcome, boundary_failures)  # noqa: E402
 from checks.live_overselling import credential  # noqa: E402
 
 COMPOSE = ['docker', 'compose', '-p', 'first-hill-final-replay', '-f', 'compose.final-replay.yaml']
@@ -49,7 +50,7 @@ def main():
     rows, groups, coverage = load_inputs(source)
     if len(rows) != 40:
         raise ValueError('Final holdout must contain exactly 40 source lines')
-    reports, responses = [], []
+    reports, responses, guard_results = [], [], []
     with httpx.Client(base_url='http://127.0.0.1:18083', trust_env=False, timeout=15) as client:
         for order_id, group in groups.items():
             key = 'final-' + order_id + '-' + uuid4().hex
@@ -59,12 +60,13 @@ def main():
             body = response.json()
             effects = owner_effects(key)
             error = body.get('error', {})
-            accepted = response.status_code == 201 and body.get('status') == 'accepted'
-            actual = 'accepted' if accepted else 'refused_unavailable' if response.status_code == 409 else 'error'
+            actual = observed_outcome(response.status_code, body)
+            guards = boundary_failures(response.status_code, body, effects, 'req-' + order_id, group[0]['store_id'])
+            guard_results.append({'order_id': order_id, 'failures': guards})
             responses.append({'order_id': order_id, 'http_status': response.status_code,
                               'body': body, 'effects': effects})
             for row in group:
-                reasons = mismatch_reasons(row, response.status_code, body, effects, 'req-' + order_id)
+                reasons = mismatch_reasons(row, response.status_code, body)
                 diagnosis = ('Store absent from supplied stock snapshot' if row['store_id'] in coverage['missing_stores']
                              else 'Store present; provider response shown without synthetic catalogue or stock overrides')
                 reports.append({'csv_line': row['csv_line'], 'order_id': order_id,
@@ -75,7 +77,8 @@ def main():
                     'actual_component': error.get('missing_component') or '',
                     'expected_message': row['expected_message'], 'actual_message': error.get('message', ''),
                     'payment_rows': effects['payment_rows'], 'queue_rows': effects['outbox_rows'],
-                    'result': 'FAIL' if reasons else 'PASS', 'reason': '; '.join(reasons), 'diagnosis': diagnosis})
+                    'result': 'FAIL' if reasons else 'PASS', 'reason': '; '.join(reasons),
+                    'boundary_failures': '; '.join(guards), 'diagnosis': diagnosis})
             run['completed_baskets'] = len(responses)
             progress()
     with (directory / 'results.csv').open('w', encoding='utf-8', newline='') as output:
@@ -85,6 +88,8 @@ def main():
     (directory / 'responses.json').write_text(json.dumps(responses, indent=2, ensure_ascii=False), encoding='utf-8')
     summary = {**coverage, 'matched': sum(row['result'] == 'PASS' for row in reports),
                'mismatched': sum(row['result'] == 'FAIL' for row in reports),
+               'match_fields': ['expected_outcome', 'expected_missing_component'],
+               'boundary_failures': sum(bool(item['failures']) for item in guard_results),
                'source_sha256': {name: hashlib.sha256((source / name).read_bytes()).hexdigest()
                                  for name in ['orders.csv', 'stock.csv']}}
     (directory / 'summary.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
@@ -94,8 +99,9 @@ def main():
               f"expected={row['expected']} actual={row['http_status']}/{row['code']} {row['diagnosis']}")
     run['state'] = 'completed'
     run['matched'], run['mismatched'] = summary['matched'], summary['mismatched']
+    run['boundary_failures'] = summary['boundary_failures']
     progress()
-    return 1 if summary['mismatched'] else 0
+    return 1 if summary['mismatched'] or summary['boundary_failures'] else 0
 
 
 if __name__ == '__main__':

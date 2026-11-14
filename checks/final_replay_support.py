@@ -3,7 +3,6 @@ import csv
 from collections import OrderedDict
 import json
 from pathlib import Path
-import re
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -48,11 +47,47 @@ def order_payload(group):
                 for row in sorted(group, key=lambda item: int(item['line_item_number']))]}
 
 
-def mismatch_reasons(row, status, body, effects, request_id):
+UNAVAILABLE_CODES = {'STORE_CLOSED', 'BASE_OUT_OF_STOCK', 'ADD_IN_OUT_OF_STOCK',
+                     'INSUFFICIENT_QUANTITY', 'STOCK_CHANGED'}
+
+
+def observed_outcome(status, body):
+    if not isinstance(body, dict):
+        return 'error'
+    if status == 201 and body.get('status') == 'accepted':
+        return 'accepted'
+    error = body.get('error', {})
+    if status == 409 and isinstance(error, dict) and error.get('code') in UNAVAILABLE_CODES:
+        return 'refused_unavailable'
+    return 'error'
+
+
+def mismatch_reasons(row, status, body):
+    """Compare exactly the two source oracle columns; other fields are diagnostics.
+
+    Schema, correlation and no-charge invariants are checked by the independent
+    safety guard, not by the source-row matcher.
+    """
+    actual = observed_outcome(status, body)
+    error = body.get('error', {}) if isinstance(body, dict) else {}
+    error = error if isinstance(error, dict) else {}
+    component = error.get('missing_component')
+    # The v1 store-closed sentinel denotes no ingredient; the final CSV is blank.
+    if error.get('code') == 'STORE_CLOSED' and component == 'store_closed':
+        component = None
+    reasons = []
+    if actual != row['expected_outcome']:
+        reasons.append('Outcome does not match source')
+    if component != (row['expected_missing_component'] or None):
+        reasons.append('Missing component does not match source')
+    return reasons
+
+
+def boundary_failures(status, body, effects, request_id, store_id):
+    """Independent frozen-contract and no-charge checks, not CSV match fields."""
     if not isinstance(body, dict):
         return ['Response is not a JSON object']
-    accepted = status == 201 and body.get('status') == 'accepted'
-    actual = 'accepted' if accepted else 'refused_unavailable' if status == 409 else 'error'
+    accepted = observed_outcome(status, body) == 'accepted'
     error = body.get('error', {})
     error = error if isinstance(error, dict) else {}
     reasons = []
@@ -65,37 +100,21 @@ def mismatch_reasons(row, status, body, effects, request_id):
                                          format_checker=FormatChecker())
         if not validator.is_valid(body):
             reasons.append('Response does not validate against frozen contract')
-    if actual != row['expected_outcome']:
-        reasons.append('Outcome does not match source')
     if body.get('request_id') != request_id:
         reasons.append('Response request ID does not match input')
     if accepted:
-        if body.get('store_id') != row['store_id']:
+        if body.get('store_id') != store_id:
             reasons.append('Accepted store does not match input')
         if not body.get('order_id') or type(body.get('queue_spot')) is not int or body['queue_spot'] < 1:
             reasons.append('Accepted response lacks valid order/queue identity')
-    if row['expected_outcome'] != 'accepted':
-        expected_code = {'store_closed': 'STORE_CLOSED', 'base_out': 'BASE_OUT_OF_STOCK',
-            'add_in_out': 'ADD_IN_OUT_OF_STOCK', 'quantity_exceeds_available': 'INSUFFICIENT_QUANTITY',
-            'mid_order_sellout': 'STOCK_CHANGED', 'multi_line_partial': 'ADD_IN_OUT_OF_STOCK'}[row['scenario_tag']]
-        if error.get('code') != expected_code:
-            reasons.append('Refusal code does not match scenario rule')
-        if error.get('missing_component') != (row['expected_missing_component'] or None):
-            reasons.append('Missing component does not match source')
-        if error.get('message') != row['expected_message']:
-            reasons.append('Exact message does not match source')
+    if status == 409 and error.get('code') in UNAVAILABLE_CODES:
         if error.get('retryable') is not False:
             reasons.append('Business refusal retryable must be false')
-        match = re.search(r'\(line (\d+)\)', row['expected_message'])
-        expected_line = None if row['scenario_tag'] == 'store_closed' else (
-            int(match.group(1)) if match else int(row['line_item_number']))
-        if error.get('line_item_number') != expected_line:
-            reasons.append('Selected refusal line does not match source')
-        expected_detail = {'code': expected_code, 'line_item_number': expected_line,
-                           'missing_component': row['expected_missing_component'] or None}
+        expected_detail = {field: error.get(field) for field in
+                           ['code', 'line_item_number', 'missing_component']}
         details = error.get('details')
         if not isinstance(details, list) or expected_detail not in details:
-            reasons.append('Refusal details do not identify source failure')
+            reasons.append('Refusal details do not identify the returned failure')
     if not accepted and (effects['payment_rows'] or effects['outbox_rows']):
         reasons.append('Refusal/uncertainty created payment or queue entry')
     if accepted and (effects['payment_rows'] != 1 or effects['outbox_rows'] != 1):

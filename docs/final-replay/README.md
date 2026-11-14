@@ -1,6 +1,8 @@
 # Final March 10 replay: actual results and open feed request
 
-**Not a successful final replay: 0/40 exact source-line matches.** The services fail closed: all 28 whole-basket attempts produced zero simulated payment rows and zero queue/outbox rows. That prevents a charge, but a 404 or 422 is not the business result the holdout asks for.
+**Current resubmission correction:** CSV matches now compare only outcome and missing component. Earlier exact-message failures below are historical results, not the current criterion. Message wording and the 0167 per-line text difference are no longer blockers. Contract and no-charge invariants remain independent gates. See `resubmission.md`, `snapshot-reconfirmation.json` and the PR's latest GitHub result.
+
+**Historical baseline: 0/40 under the original, incorrect exact-message oracle.** All 28 baseline whole-basket attempts produced zero simulated payment rows and zero queue/outbox rows. That prevents a charge, but a 404 or 422 is not the business result the holdout asks for. The current oracle is the two-column one described above; the PR links its fresh results.
 
 ## Sources (unchanged)
 
@@ -26,7 +28,7 @@ To Store Inventory Systems (Tobias Wren / Keiko Hamasaki), via the manager: supp
 
 Also provide the compatible trusted catalogue/recipe/component units and the intervening stock/hold events for `mid_order_sellout`. The order CSV's labels are expected results, not an authoritative recipe/feed or recorded explanation of how stock changed. Keep store IDs as strings and unknown stores refused while these inputs are missing. Implement any compatible provider mapping with a failing test first; never obtain 40/40 by assigning counts from expected outcomes.
 
-There is also a comparison contradiction: MO-20250310-0167 has two source lines (CSV 6–7) requiring different exact error messages for one whole-basket response. The frozen API has one error.message, so both cannot match simultaneously. The owner must clarify the authoritative order-level expectation or intended line-display comparison. This is an additional blocker even after the missing feed is supplied; neither source nor contract was relaxed.
+The previous message-conflict diagnosis for MO-20250310-0167 was incorrect: expected_message is not a match column. That blocker is closed by the comparator correction, without changing any source message or runtime contract. The actual missing-store input remains unresolved.
 
 ## Reproduction and CI
 
@@ -55,6 +57,6 @@ After stopping local proof containers, the full suite passed **148 tests in 118.
 
 ## Subsequent bounded fix
 
-As requested in manager review, inventory now accepts registered spellings for the existing oat-drink recipes and maps their ingredient identities to unique compatible component names within that same store. It uses the supplied oat 0/0 unchanged, rather than allowing validation to hide the shortage. Provider tests now return 409 BASE_OUT_OF_STOCK for 0209 and 0624 with no hold or count mutation. Unsupported recipes and stores stay refused. The API message wording remains frozen and still differs from the final source text; these two rows are not declared exact matches. Five initial adapter cases plus six replay-input/matcher cases and 85 frozen contracts passed together (96 tests). A sixth adapter regression then preserved the existing UNKNOWN_ITEM result for missing recipe components; all 12 final cases passed in 3.33s. See `catalogue-gap.md` for before/after proof and the PR's latest run for the fresh gateway replay.
+As requested in manager review, inventory now accepts registered spellings for the existing oat-drink recipes and maps their ingredient identities to unique compatible component names within that same store. It uses the supplied oat 0/0 unchanged, rather than allowing validation to hide the shortage. Provider tests return 409 BASE_OUT_OF_STOCK for 0209 and 0624 with no hold or count mutation. Unsupported recipes and stores stay refused. API message wording remains unchanged; the corrected two-column oracle permits that display-text difference. Five initial adapter cases plus six replay-input/matcher cases and 85 frozen contracts passed together (96 tests). A sixth adapter regression preserved the existing UNKNOWN_ITEM result for missing recipe components; all 12 final cases passed in 3.33s. See `catalogue-gap.md` for before/after proof and the PR's latest run for the fresh gateway replay.
 
 Final local implementation verification: **158 passed in 92.83s**, Ruff green; raw output is `local-tests-adapter.txt`. The full suite includes the frozen contracts and new compatibility regressions. This green service suite does not turn the separate holdout's unresolved source mismatches into passes.

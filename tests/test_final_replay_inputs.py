@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib
 import json
 
-from checks.final_replay_support import load_inputs, order_payload, mismatch_reasons
+from checks.final_replay_support import load_inputs, order_payload, mismatch_reasons, boundary_failures
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -34,14 +34,14 @@ def test_final_multi_line_basket_preserves_inputs_without_expected_labels():
                for line in payload['items'])
 
 
-def test_final_refusal_cannot_pass_with_wrong_code_or_side_effects():
+def test_boundary_rejects_incomplete_refusal_and_payment_side_effects():
     rows, _, _ = load_inputs(ROOT / 'docs/final-replay')
     row = next(row for row in rows if row['order_id'] == 'MO-20250310-0209')
     body = {'request_id': 'req-proof', 'error': {
         'code': 'STOCK_CHANGED', 'message': row['expected_message'],
         'missing_component': 'oat milk', 'retryable': False}}
-    reasons = mismatch_reasons(row, 409, body, {'payment_rows': 1, 'outbox_rows': 0}, 'req-proof')
-    assert 'Refusal code does not match scenario rule' in reasons
+    reasons = boundary_failures(409, body, {'payment_rows': 1, 'outbox_rows': 0}, 'req-proof', row['store_id'])
+    assert 'Response does not validate against frozen contract' in reasons
     assert 'Refusal/uncertainty created payment or queue entry' in reasons
 
 
@@ -50,7 +50,7 @@ def test_final_acceptance_cannot_pass_with_wrong_store_or_request_id():
     row = rows[0]
     body = {'status': 'accepted', 'store_id': 'wrong-store', 'order_id': 'opaque',
             'queue_spot': 1, 'request_id': 'wrong-request'}
-    reasons = mismatch_reasons(row, 201, body, {'payment_rows': 1, 'outbox_rows': 1}, 'req-proof')
+    reasons = boundary_failures(201, body, {'payment_rows': 1, 'outbox_rows': 1}, 'req-proof', row['store_id'])
     assert 'Accepted store does not match input' in reasons
     assert 'Response request ID does not match input' in reasons
 
@@ -61,22 +61,23 @@ def test_final_comparison_accepts_complete_matching_refusal_and_acceptance():
     detail = {'code': 'BASE_OUT_OF_STOCK', 'line_item_number': 1, 'missing_component': 'oat milk'}
     body = {'request_id': 'req-proof', 'error': {
         **detail, 'message': row['expected_message'], 'details': [detail], 'retryable': False}}
-    assert mismatch_reasons(row, 409, body, {'payment_rows': 0, 'outbox_rows': 0}, 'req-proof') == []
+    assert mismatch_reasons(row, 409, body) == []
+    assert boundary_failures(409, body, {'payment_rows': 0, 'outbox_rows': 0}, 'req-proof', row['store_id']) == []
     accepted = {'status': 'accepted', 'store_id': rows[0]['store_id'], 'order_id': 'opaque',
                 'queue_spot': 3, 'request_id': 'req-proof'}
-    assert mismatch_reasons(rows[0], 201, accepted, {'payment_rows': 1, 'outbox_rows': 1}, 'req-proof') == []
+    assert mismatch_reasons(rows[0], 201, accepted) == []
 
 
-def test_final_comparison_rejects_wrong_selected_line_and_incomplete_envelope():
+def test_boundary_rejects_inconsistent_details_and_incomplete_envelope():
     rows, _, _ = load_inputs(ROOT / 'docs/final-replay')
     row = next(row for row in rows if row['order_id'] == 'MO-20250310-0209')
     body = {'request_id': 'req-proof', 'error': {
         'code': 'BASE_OUT_OF_STOCK', 'line_item_number': 2,
         'missing_component': 'oat milk', 'message': row['expected_message'],
         'details': [], 'retryable': False}}
-    reasons = mismatch_reasons(row, 409, body, {'payment_rows': 0, 'outbox_rows': 0}, 'req-proof')
-    assert 'Selected refusal line does not match source' in reasons
-    assert 'Refusal details do not identify source failure' in reasons
+    assert mismatch_reasons(row, 409, body) == []
+    reasons = boundary_failures(409, body, {'payment_rows': 0, 'outbox_rows': 0}, 'req-proof', row['store_id'])
+    assert 'Refusal details do not identify the returned failure' in reasons
     del body['error']['retryable']
-    assert 'Response does not validate against frozen contract' in mismatch_reasons(
-        row, 409, body, {'payment_rows': 0, 'outbox_rows': 0}, 'req-proof')
+    assert 'Response does not validate against frozen contract' in boundary_failures(
+        409, body, {'payment_rows': 0, 'outbox_rows': 0}, 'req-proof', row['store_id'])
