@@ -1,5 +1,7 @@
 """Final replay inputs cannot manufacture missing stock or split baskets."""
 from pathlib import Path
+import hashlib
+import json
 
 from checks.final_replay_support import load_inputs, order_payload, mismatch_reasons
 
@@ -14,6 +16,9 @@ def test_final_sources_have_40_lines_and_report_missing_stores():
     assert coverage['missing_stores'] == [
         'STB-10358', 'STB-10417', 'STB-10466', 'STB-10503',
         'STB-10529', 'STB-10588', 'STB-10611']
+    recorded = json.loads((ROOT / 'docs/final-replay/summary.json').read_text())['source_sha256']
+    for filename, digest in recorded.items():
+        assert hashlib.sha256((ROOT / 'docs/final-replay' / filename).read_bytes()).hexdigest() == digest
 
 
 def test_final_multi_line_basket_preserves_inputs_without_expected_labels():
