@@ -1,0 +1,126 @@
+{
+  "kind": "local gateway replay after recipe registration; not GitHub CI",
+  "run": {
+    "state": "completed",
+    "completed_baskets": 28,
+    "github_run_id": null,
+    "github_sha": null,
+    "matched": 2,
+    "mismatched": 38,
+    "boundary_failures": 0
+  },
+  "summary": {
+    "source_rows": 40,
+    "baskets": 28,
+    "order_stores": [
+      "STB-10342",
+      "STB-10358",
+      "STB-10417",
+      "STB-10466",
+      "STB-10503",
+      "STB-10529",
+      "STB-10588",
+      "STB-10611"
+    ],
+    "snapshot_stores": [
+      "STB-10342",
+      "STB-10518",
+      "STB-10877",
+      "STB-11203",
+      "STB-11456"
+    ],
+    "missing_stores": [
+      "STB-10358",
+      "STB-10417",
+      "STB-10466",
+      "STB-10503",
+      "STB-10529",
+      "STB-10588",
+      "STB-10611"
+    ],
+    "overlapping_rows": 6,
+    "matched": 2,
+    "mismatched": 38,
+    "match_fields": [
+      "expected_outcome",
+      "expected_missing_component"
+    ],
+    "boundary_failures": 0,
+    "source_sha256": {
+      "orders.csv": "6c1d31093e11fea50a59b6bd800ca176fdd6dd7d10b509e2e875e9bdc8a1f46d",
+      "stock.csv": "651326beceb9273dddd0b993bfd6912574efdc1ea52ea3ab5c67d99afeaffeeb"
+    }
+  },
+  "affected_baskets": [
+    {
+      "order_id": "MO-20250310-0302",
+      "http_status": 422,
+      "body": {
+        "error": {
+          "code": "UNKNOWN_ITEM",
+          "message": "Recipe component is not in this store catalogue.",
+          "line_item_number": null,
+          "missing_component": null,
+          "details": [],
+          "retryable": false
+        },
+        "request_id": "req-MO-20250310-0302"
+      },
+      "effects": {
+        "order_id": "5765c6f0-f40e-418c-900e-be5bdc38d9f5",
+        "status": 422,
+        "phase": "done",
+        "payment_rows": 0,
+        "outbox_rows": 0
+      }
+    },
+    {
+      "order_id": "MO-20250310-0553",
+      "http_status": 422,
+      "body": {
+        "error": {
+          "code": "UNKNOWN_ITEM",
+          "message": "Recipe component is not in this store catalogue.",
+          "line_item_number": null,
+          "missing_component": null,
+          "details": [],
+          "retryable": false
+        },
+        "request_id": "req-MO-20250310-0553"
+      },
+      "effects": {
+        "order_id": "d70ee955-57e4-455e-8ef1-d1ae6894fd5b",
+        "status": 422,
+        "phase": "done",
+        "payment_rows": 0,
+        "outbox_rows": 0
+      }
+    },
+    {
+      "order_id": "MO-20250310-1268",
+      "http_status": 422,
+      "body": {
+        "error": {
+          "code": "UNKNOWN_ITEM",
+          "message": "Recipe component is not in this store catalogue.",
+          "line_item_number": null,
+          "missing_component": null,
+          "details": [],
+          "retryable": false
+        },
+        "request_id": "req-MO-20250310-1268"
+      },
+      "effects": {
+        "order_id": "3fde3a8e-7a85-4bf4-a378-4f1af88f7508",
+        "status": 422,
+        "phase": "done",
+        "payment_rows": 0,
+        "outbox_rows": 0
+      }
+    }
+  ],
+  "all_basket_effect_totals": {
+    "payment_rows": 0,
+    "outbox_rows": 0
+  }
+}

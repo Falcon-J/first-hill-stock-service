@@ -17,18 +17,30 @@ COMPONENTS = {
     'matcha_powder': ('Matcha Tea Powder', 'drink_base'),
     'caramel_drizzle': ('Caramel Drizzle', 'add_in'),
     'cups_ice': ('Cups & Ice', 'drink_base'),
+    'cold_brew': ('cold brew', 'drink_base'),
+    'chai_concentrate': ('chai concentrate', 'drink_base'),
+    'strawberry_acai_base': ('strawberry açaí base', 'drink_base'),
+    'coconut_milk': ('coconut milk', 'drink_base'),
 }
-MILKS = {'Oatmilk': 'oat_milk', 'Almondmilk': 'almond_milk', '2% Milk': 'two_pct_milk'}
+MILKS = {'Oatmilk': 'oat_milk', 'Almondmilk': 'almond_milk', '2% Milk': 'two_pct_milk',
+         'coconut milk': 'coconut_milk'}
 ADD_INS = {name: component for component, (name, kind) in COMPONENTS.items() if kind == 'add_in'}
 DRINKS = {
     'Caffè Latte': {'espresso_signature': 1},
     'Iced Brown Sugar Oatmilk Shaken Espresso': {'espresso_signature': 1, 'brown_sugar_syrup': 1},
     'Matcha Latte': {'matcha_powder': 1},
     'Iced Matcha Latte': {'matcha_powder': 1},
+    # Same demo stock-unit convention as the existing recipes, not commercial
+    # size-specific Starbucks quantities. Registration never creates inventory.
+    'Cold Brew': {'cold_brew': 1},
+    'Caffè Americano': {'espresso_signature': 1},
+    'Chai Tea Latte': {'chai_concentrate': 1},
+    'Pink Drink': {'strawberry_acai_base': 1, 'coconut_milk': 1},
 }
 SIZES = {'Tall', 'Grande', 'Venti'}
 MILK_SPELLINGS = {**{name.casefold(): component for name, component in MILKS.items()},
-                 'oat': 'oat_milk', 'almond': 'almond_milk', '2%': 'two_pct_milk'}
+                 'oat': 'oat_milk', 'almond': 'almond_milk', '2%': 'two_pct_milk',
+                 'coconut': 'coconut_milk'}
 ADD_IN_SPELLINGS = {name.casefold(): component for name, component in ADD_INS.items()}
 # Explicit semantic names from the supplied stock feed, not inferred ID prefixes.
 FEED_NAMES = {'espresso_signature': {'espresso'}, 'oat_milk': {'oat milk'},
