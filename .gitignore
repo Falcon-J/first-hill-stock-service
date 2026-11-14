@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .env
 *.log
+contract-results.xml
+*.sqlite*
+.ruff_cache/
+final-replay-results/

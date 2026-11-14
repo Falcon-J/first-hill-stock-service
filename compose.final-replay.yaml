@@ -1,0 +1,64 @@
+# Final source replay: no per-scenario stock seeding, no inferred aliases.
+name: first-hill-final-replay
+services:
+  stock:
+    build:
+      context: .
+      dockerfile: services/stock/Dockerfile
+    environment:
+      STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Create the local .env first}
+      STOCK_STORAGE_PATH: /state/stock.sqlite
+      STOCK_SNAPSHOT_PATH: /source/stock.csv
+      ALLOW_REPLAY_EVENTS: "1"
+    volumes:
+      - final_stock_state:/state
+      - ./docs/final-replay/stock.csv:/source/stock.csv:ro
+      - ./checks/stock_replay_event.py:/checks/stock_replay_event.py:ro
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  order:
+    build:
+      context: .
+      dockerfile: services/order/Dockerfile
+    environment:
+      ORDER_SERVICE_TOKEN: ${ORDER_SERVICE_TOKEN:?Create the local .env first}
+      STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Create the local .env first}
+      STOCK_URL: http://stock:8000
+      ORDERS_DB: /data/orders.sqlite3
+      PAYMENT_ADAPTER: development
+      ALLOW_TEST_FIXTURES: "1"
+    volumes:
+      - final_order_state:/data
+      - ./checks/order_inspect.py:/checks/order_inspect.py:ro
+    depends_on:
+      stock:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    environment:
+      ORDER_URL: http://order:8000
+      ORDER_SERVICE_TOKEN: ${ORDER_SERVICE_TOKEN:?Create the local .env first}
+      GATEWAY_CUSTOMER_TOKEN: ${GATEWAY_CUSTOMER_TOKEN:?Create the local .env first}
+    ports:
+      - 127.0.0.1:18083:8000
+    depends_on:
+      order:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+volumes:
+  final_stock_state:
+  final_order_state:

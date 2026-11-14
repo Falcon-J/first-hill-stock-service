@@ -1,0 +1,56 @@
+services:
+  stock:
+    build:
+      context: .
+      dockerfile: services/stock/Dockerfile
+    environment:
+      STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Set STOCK_SERVICE_TOKEN in .env}
+      STOCK_STORAGE_PATH: /state/stock.sqlite
+    volumes:
+      - stock_state:/state
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  order:
+    build:
+      context: .
+      dockerfile: services/order/Dockerfile
+    environment:
+      ORDER_SERVICE_TOKEN: ${ORDER_SERVICE_TOKEN:?Set ORDER_SERVICE_TOKEN in .env}
+      STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Set STOCK_SERVICE_TOKEN in .env}
+      STOCK_URL: http://stock:8000
+      ORDERS_DB: /data/orders.sqlite3
+      PAYMENT_ADAPTER: development
+    volumes:
+      - order_state:/data
+    depends_on:
+      stock:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    environment:
+      ORDER_URL: http://order:8000
+      ORDER_SERVICE_TOKEN: ${ORDER_SERVICE_TOKEN:?Set ORDER_SERVICE_TOKEN in .env}
+      GATEWAY_CUSTOMER_TOKEN: ${GATEWAY_CUSTOMER_TOKEN:?Set GATEWAY_CUSTOMER_TOKEN in .env}
+    ports:
+      - 127.0.0.1:18080:8000
+    depends_on:
+      order:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+volumes:
+  stock_state:
+  order_state:

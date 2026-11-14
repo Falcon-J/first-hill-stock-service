@@ -2,6 +2,16 @@
 
 **Feature**: `001-order-refusals` | **Created**: 2026-11-14 | **Status**: Draft
 
+**Boundary-review amendment:** The current proposed wire contracts are in
+`contracts/*.openapi.yaml`, with ownership/failure decisions in
+`specs/002-service-contracts/plan.md`. They preserve the existing
+`{error: {code, message}, request_id}` envelope and add line/component/details.
+The flat response examples below remain historical acceptance/source evidence;
+they are not the new public wire shape. `contracts/refusal-cases.json` migrates
+all 21 cases without changing their reason, line, missing component or message.
+Stock alone resolves recipes and decides current fulfilability; the order
+service submits the original basket, not raw-count calculations.
+
 **Brief**: The gateway takes a store ID, drinks, sizes, chosen milks, add-ins and
 quantities. The order service checks authoritative hours and stock, reserves the
 entire basket before payment, then either returns an accepted order with a queue
@@ -296,8 +306,8 @@ input and repeated requests. Refuse the whole basket; never substitute stock.
   an `Idempotency-Key` header; each item MUST contain unique positive line number,
   catalogue drink/size/milk/add-ins and a positive integer quantity. Client price
   and scenario tags MUST NOT determine price or availability.
-- **FR-002:** Order service MUST resolve trusted recipes into component units,
-  multiply by quantity and aggregate across lines. Milk None means no chosen
+- **FR-002:** Order service MUST ask stock to resolve trusted recipes into
+  component units, multiply by quantity and aggregate across lines. Milk None means no chosen
   milk, not bypassing recipe-required bases/add-ins. Unsupported recipes MUST
   give AC-E4 and MUST NOT be approximated with the current snapshot catalogue.
 - **FR-003:** Stock service MUST atomically check hours and available quantities

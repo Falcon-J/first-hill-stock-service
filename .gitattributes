@@ -1,0 +1,3 @@
+# Preserve downloaded final inputs byte-for-byte on Windows and Linux.
+docs/final-replay/orders.csv -text
+docs/final-replay/stock.csv -text

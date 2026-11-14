@@ -1,0 +1,1175 @@
+{
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "LineItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "line_item_number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "drink_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "size": {
+            "type": "string",
+            "minLength": 1
+          },
+          "milk": {
+            "type": "string",
+            "minLength": 1
+          },
+          "add_ins": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "line_item_number",
+          "drink_name",
+          "size",
+          "milk",
+          "add_ins",
+          "quantity"
+        ]
+      },
+      "Basket": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "store_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Opaque inventory-owned string/explicit alias; no guessed normalization."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineItem"
+            },
+            "minItems": 1
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "store_id",
+          "items"
+        ]
+      },
+      "FailureDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "STORE_CLOSED",
+              "BASE_OUT_OF_STOCK",
+              "ADD_IN_OUT_OF_STOCK",
+              "INSUFFICIENT_QUANTITY",
+              "STOCK_CHANGED",
+              "RESERVATION_EXPIRED",
+              "STORE_NOT_FOUND",
+              "UNKNOWN_ITEM",
+              "INVALID_ORDER",
+              "IDEMPOTENCY_CONFLICT",
+              "INVALID_RESERVATION_STATE",
+              "RESERVATION_NOT_FOUND",
+              "PAYMENT_DECLINED",
+              "STOCK_CHECK_UNAVAILABLE",
+              "UPSTREAM_UNAVAILABLE",
+              "DEADLINE_EXCEEDED",
+              "UNAUTHORIZED",
+              "FORBIDDEN"
+            ]
+          },
+          "line_item_number": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "missing_component": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "line_item_number",
+          "missing_component"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "STORE_CLOSED",
+              "BASE_OUT_OF_STOCK",
+              "ADD_IN_OUT_OF_STOCK",
+              "INSUFFICIENT_QUANTITY",
+              "STOCK_CHANGED",
+              "RESERVATION_EXPIRED",
+              "STORE_NOT_FOUND",
+              "UNKNOWN_ITEM",
+              "INVALID_ORDER",
+              "IDEMPOTENCY_CONFLICT",
+              "INVALID_RESERVATION_STATE",
+              "RESERVATION_NOT_FOUND",
+              "PAYMENT_DECLINED",
+              "STOCK_CHECK_UNAVAILABLE",
+              "UPSTREAM_UNAVAILABLE",
+              "DEADLINE_EXCEEDED",
+              "UNAUTHORIZED",
+              "FORBIDDEN"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Product-owned, human-readable text; examples are fixtures, not fixed copy."
+          },
+          "line_item_number": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "missing_component": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FailureDetail"
+            },
+            "minItems": 0
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "line_item_number",
+          "missing_component",
+          "details",
+          "retryable"
+        ]
+      },
+      "ErrorEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/Error"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "error",
+          "request_id"
+        ]
+      },
+      "OrderRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "store_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Opaque inventory-owned string/explicit alias; no guessed normalization."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineItem"
+            },
+            "minItems": 1
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payment_method_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Opaque payment token; never sent to stock or logged."
+          },
+          "availability_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional opaque inventory-issued menu decision token. It is not a hold; inventory validates binding/expiry and still checks current stock."
+          }
+        },
+        "required": [
+          "store_id",
+          "items",
+          "payment_method_token"
+        ]
+      },
+      "AcceptedOrder": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "const": "accepted",
+            "type": "string"
+          },
+          "order_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "store_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queue_spot": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "status",
+          "order_id",
+          "store_id",
+          "queue_spot",
+          "request_id"
+        ]
+      },
+      "PendingOrder": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "const": "pending",
+            "type": "string"
+          },
+          "order_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "ORDER_PENDING",
+              "PAYMENT_PENDING"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "status",
+          "order_id",
+          "code",
+          "message",
+          "request_id"
+        ]
+      },
+      "OrderResult": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/AcceptedOrder"
+          },
+          {
+            "$ref": "#/components/schemas/PendingOrder"
+          }
+        ]
+      },
+      "StockChangedEnvelope": {
+        "description": "Required variant when a previously available basket loses stock at checkout or final confirmation. Select using authoritative inventory state, never client claims.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "const": "STOCK_CHANGED"
+                  },
+                  "retryable": {
+                    "const": false
+                  },
+                  "line_item_number": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "missing_component": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "details": {
+                    "type": "array",
+                    "minItems": 1,
+                    "prefixItems": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "const": "STOCK_CHANGED"
+                          },
+                          "line_item_number": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "missing_component": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    ],
+                    "items": {
+                      "$ref": "#/components/schemas/FailureDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "OtherBusinessRefusalEnvelope": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "enum": [
+                      "STORE_CLOSED",
+                      "BASE_OUT_OF_STOCK",
+                      "ADD_IN_OUT_OF_STOCK",
+                      "INSUFFICIENT_QUANTITY",
+                      "RESERVATION_EXPIRED",
+                      "IDEMPOTENCY_CONFLICT",
+                      "INVALID_RESERVATION_STATE"
+                    ]
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "BusinessRefusalEnvelope": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StockChangedEnvelope"
+          },
+          {
+            "$ref": "#/components/schemas/OtherBusinessRefusalEnvelope"
+          }
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/v1/orders": {
+      "post": {
+        "operationId": "placeOrder",
+        "summary": "Route to order service; preserve its status, reason, line/component and request_id.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "description": "Owner-scoped immutable attempt key; same payload replays, changed payload conflicts; tombstone >=24h.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Request-ID",
+            "required": false,
+            "description": "If supplied validate and preserve; otherwise generate. Gateway assigns trusted deadline.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Authentication missing/invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller cannot access this order/reservation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "forbidden": {
+                    "value": {
+                      "error": {
+                        "code": "FORBIDDEN",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown store, reservation or order; never fabricated stock.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "unknown_store": {
+                    "value": {
+                      "error": {
+                        "code": "STORE_NOT_FOUND",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Nonretryable business refusal/conflict. No stock refusal after payment capture. A verified menu-available basket that loses stock at checkout/confirmation MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only to their own conditions. Tests supply authoritative race state and enforce variant selection.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessRefusalEnvelope"
+                },
+                "examples": {
+                  "store_closed": {
+                    "value": {
+                      "error": {
+                        "code": "STORE_CLOSED",
+                        "message": "Bellevue Square is closed right now and can't take mobile orders.",
+                        "line_item_number": null,
+                        "missing_component": "store_closed",
+                        "details": [
+                          {
+                            "code": "STORE_CLOSED",
+                            "line_item_number": null,
+                            "missing_component": "store_closed"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250303-0001"
+                    }
+                  },
+                  "base_out_of_stock": {
+                    "value": {
+                      "error": {
+                        "code": "BASE_OUT_OF_STOCK",
+                        "message": "Line 1, Grande Caffè Latte: Almondmilk is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Almondmilk",
+                        "details": [
+                          {
+                            "code": "BASE_OUT_OF_STOCK",
+                            "line_item_number": 1,
+                            "missing_component": "Almondmilk"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250304-0007"
+                    }
+                  },
+                  "add_in_out_of_stock": {
+                    "value": {
+                      "error": {
+                        "code": "ADD_IN_OUT_OF_STOCK",
+                        "message": "Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Vanilla Sweet Cream Cold Foam",
+                        "details": [
+                          {
+                            "code": "ADD_IN_OUT_OF_STOCK",
+                            "line_item_number": 1,
+                            "missing_component": "Vanilla Sweet Cream Cold Foam"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250305-0014"
+                    }
+                  },
+                  "stock_runs_out_mid_order": {
+                    "value": {
+                      "error": {
+                        "code": "STOCK_CHANGED",
+                        "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Oatmilk",
+                        "details": [
+                          {
+                            "code": "STOCK_CHANGED",
+                            "line_item_number": 1,
+                            "missing_component": "Oatmilk"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250307-0024"
+                    }
+                  },
+                  "insufficient_quantity": {
+                    "value": {
+                      "error": {
+                        "code": "INSUFFICIENT_QUANTITY",
+                        "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown Sugar Syrup is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Brown Sugar Syrup",
+                        "details": [
+                          {
+                            "code": "INSUFFICIENT_QUANTITY",
+                            "line_item_number": 1,
+                            "missing_component": "Brown Sugar Syrup"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250307-0028"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid basket or unknown catalogue item.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "unknown_item": {
+                    "value": {
+                      "error": {
+                        "code": "UNKNOWN_ITEM",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": 1,
+                        "missing_component": "Unknown ingredient",
+                        "details": [
+                          {
+                            "code": "UNKNOWN_ITEM",
+                            "line_item_number": 1,
+                            "missing_component": "Unknown ingredient"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Pre-payment dependency failure, not a sold-out business refusal. Retry original key only.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "dependency": {
+                    "value": {
+                      "error": {
+                        "code": "STOCK_CHECK_UNAVAILABLE",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": true
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Captured, durably accepted; one queue entry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptedOrder"
+                },
+                "examples": {
+                  "accepted": {
+                    "value": {
+                      "status": "accepted",
+                      "order_id": "order-1",
+                      "store_id": "SB-10482",
+                      "queue_spot": 1,
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Durable attempt pending reconciliation; never a false stock refusal after capture.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PendingOrder"
+                },
+                "examples": {
+                  "pending": {
+                    "value": {
+                      "status": "pending",
+                      "order_id": "order-1",
+                      "code": "PAYMENT_PENDING",
+                      "message": "Payment confirmation is pending.",
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Terminal payment decline; release allocation once.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "declined": {
+                    "value": {
+                      "error": {
+                        "code": "PAYMENT_DECLINED",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Unusable upstream response, not a business refusal. Retry only the original key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "upstream": {
+                    "value": {
+                      "error": {
+                        "code": "UPSTREAM_UNAVAILABLE",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": true
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway deadline/upstream timeout with outcome unknown. Does not assert stock refusal or no charge; replay original key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "deadline": {
+                    "value": {
+                      "error": {
+                        "code": "DEADLINE_EXCEEDED",
+                        "message": "Order confirmation is pending; retry using the same idempotency key.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": true
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/orders/{order_id}": {
+      "get": {
+        "operationId": "getOrder",
+        "summary": "Reconcile/retrieve the caller-owned order; no new charge.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Request-ID",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Authentication missing/invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller cannot access this order/reservation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "forbidden": {
+                    "value": {
+                      "error": {
+                        "code": "FORBIDDEN",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown store, reservation or order; never fabricated stock.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "unknown_store": {
+                    "value": {
+                      "error": {
+                        "code": "STORE_NOT_FOUND",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Nonretryable business refusal/conflict. No stock refusal after payment capture. A verified menu-available basket that loses stock at checkout/confirmation MUST use StockChangedEnvelope, not another 409 variant. Other variants apply only to their own conditions. Tests supply authoritative race state and enforce variant selection.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessRefusalEnvelope"
+                },
+                "examples": {
+                  "store_closed": {
+                    "value": {
+                      "error": {
+                        "code": "STORE_CLOSED",
+                        "message": "Bellevue Square is closed right now and can't take mobile orders.",
+                        "line_item_number": null,
+                        "missing_component": "store_closed",
+                        "details": [
+                          {
+                            "code": "STORE_CLOSED",
+                            "line_item_number": null,
+                            "missing_component": "store_closed"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250303-0001"
+                    }
+                  },
+                  "base_out_of_stock": {
+                    "value": {
+                      "error": {
+                        "code": "BASE_OUT_OF_STOCK",
+                        "message": "Line 1, Grande Caffè Latte: Almondmilk is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Almondmilk",
+                        "details": [
+                          {
+                            "code": "BASE_OUT_OF_STOCK",
+                            "line_item_number": 1,
+                            "missing_component": "Almondmilk"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250304-0007"
+                    }
+                  },
+                  "add_in_out_of_stock": {
+                    "value": {
+                      "error": {
+                        "code": "ADD_IN_OUT_OF_STOCK",
+                        "message": "Line 1, Venti Cold Brew: Vanilla Sweet Cream Cold Foam is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Vanilla Sweet Cream Cold Foam",
+                        "details": [
+                          {
+                            "code": "ADD_IN_OUT_OF_STOCK",
+                            "line_item_number": 1,
+                            "missing_component": "Vanilla Sweet Cream Cold Foam"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250305-0014"
+                    }
+                  },
+                  "stock_runs_out_mid_order": {
+                    "value": {
+                      "error": {
+                        "code": "STOCK_CHANGED",
+                        "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Oatmilk",
+                        "details": [
+                          {
+                            "code": "STOCK_CHANGED",
+                            "line_item_number": 1,
+                            "missing_component": "Oatmilk"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250307-0024"
+                    }
+                  },
+                  "insufficient_quantity": {
+                    "value": {
+                      "error": {
+                        "code": "INSUFFICIENT_QUANTITY",
+                        "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Brown Sugar Syrup is unavailable at this store right now.",
+                        "line_item_number": 1,
+                        "missing_component": "Brown Sugar Syrup",
+                        "details": [
+                          {
+                            "code": "INSUFFICIENT_QUANTITY",
+                            "line_item_number": 1,
+                            "missing_component": "Brown Sugar Syrup"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-MO-250307-0028"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid basket or unknown catalogue item.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "unknown_item": {
+                    "value": {
+                      "error": {
+                        "code": "UNKNOWN_ITEM",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": 1,
+                        "missing_component": "Unknown ingredient",
+                        "details": [
+                          {
+                            "code": "UNKNOWN_ITEM",
+                            "line_item_number": 1,
+                            "missing_component": "Unknown ingredient"
+                          }
+                        ],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Pre-payment dependency failure, not a sold-out business refusal. Retry original key only.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "dependency": {
+                    "value": {
+                      "error": {
+                        "code": "STOCK_CHECK_UNAVAILABLE",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": true
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Accepted or pending state; terminal refusal is its documented error status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResult"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Persisted terminal payment decline.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "declined": {
+                    "value": {
+                      "error": {
+                        "code": "PAYMENT_DECLINED",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": false
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Unusable upstream response, not a business refusal. Retry only the original key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "upstream": {
+                    "value": {
+                      "error": {
+                        "code": "UPSTREAM_UNAVAILABLE",
+                        "message": "Unable to complete this request.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": true
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway deadline/upstream timeout with outcome unknown. Does not assert stock refusal or no charge; replay original key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                },
+                "examples": {
+                  "deadline": {
+                    "value": {
+                      "error": {
+                        "code": "DEADLINE_EXCEEDED",
+                        "message": "Order confirmation is pending; retry using the same idempotency key.",
+                        "line_item_number": null,
+                        "missing_component": null,
+                        "details": [],
+                        "retryable": true
+                      },
+                      "request_id": "req-contract-1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

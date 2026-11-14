@@ -1,0 +1,41 @@
+order_id,store_id,submitted_at,line_item_number,drink_name,size,milk,add_ins,quantity,total_price,scenario_tag,stock_runs_out_mid_order,expected_outcome,expected_missing_component,expected_message
+MO-20250310-0118,STB-10358,2025-03-10T06:51:09-07:00,1,Iced Brown Sugar Oatmilk Shaken Espresso,Venti,oat,brown sugar syrup,4,26.80,in_stock,false,accepted,,
+MO-20250310-0139,STB-10588,2025-03-10T06:53:44-07:00,1,Caramel Macchiato,Grande,2%,vanilla syrup;caramel drizzle,1,6.05,in_stock,false,accepted,,
+MO-20250310-0139,STB-10588,2025-03-10T06:53:44-07:00,2,Cappuccino,Tall,whole,,1,4.85,in_stock,false,accepted,,
+MO-20250310-0139,STB-10588,2025-03-10T06:53:44-07:00,3,Flat White,Grande,whole,,1,5.95,in_stock,false,accepted,,
+MO-20250310-0167,STB-10417,2025-03-10T06:56:20-07:00,1,Caffè Latte,Grande,2%,,1,5.45,store_closed,false,refused_unavailable,,Caffè Latte (line 1) is unavailable: this store is not taking mobile orders right now.
+MO-20250310-0167,STB-10417,2025-03-10T06:56:20-07:00,2,Cold Brew,Venti,none,classic syrup,1,6.45,store_closed,false,refused_unavailable,,Cold Brew (line 2) is unavailable: this store is not taking mobile orders right now.
+MO-20250310-0186,STB-10466,2025-03-10T06:58:12-07:00,1,Cold Brew,Grande,none,vanilla sweet cream cold foam,2,13.00,in_stock,false,accepted,,
+MO-20250310-0186,STB-10466,2025-03-10T06:58:12-07:00,2,Caffè Americano,Grande,none,,1,4.95,in_stock,false,accepted,,
+MO-20250310-0186,STB-10466,2025-03-10T06:58:12-07:00,3,Chai Tea Latte,Tall,2%,,1,4.95,in_stock,false,accepted,,
+MO-20250310-0209,STB-10342,2025-03-10T07:00:41-07:00,1,Caffè Latte,Grande,oat,,1,6.15,base_out,false,refused_unavailable,oat milk,Caffè Latte (line 1) is unavailable: this store is out of oat milk.
+MO-20250310-0251,STB-10503,2025-03-10T07:04:27-07:00,1,Caffè Latte,Grande,almond,,3,18.45,quantity_exceeds_available,false,refused_unavailable,almond milk,Caffè Latte (line 1) is unavailable: this store does not have enough almond milk for 3 drinks.
+MO-20250310-0302,STB-10342,2025-03-10T07:09:53-07:00,1,Cold Brew,Venti,none,,1,5.65,in_stock,false,accepted,,
+MO-20250310-0302,STB-10342,2025-03-10T07:09:53-07:00,2,Caffè Americano,Venti,none,,1,5.25,in_stock,false,accepted,,
+MO-20250310-0338,STB-10529,2025-03-10T07:13:15-07:00,1,Iced Brown Sugar Oatmilk Shaken Espresso,Grande,oat,brown sugar syrup,1,6.25,add_in_out,false,refused_unavailable,brown sugar syrup,Iced Brown Sugar Oatmilk Shaken Espresso (line 1) is unavailable: this store is out of brown sugar syrup.
+MO-20250310-0338,STB-10529,2025-03-10T07:13:15-07:00,2,Iced Brown Sugar Oatmilk Shaken Espresso,Venti,oat,brown sugar syrup;vanilla sweet cream cold foam,1,7.95,add_in_out,false,refused_unavailable,brown sugar syrup,Iced Brown Sugar Oatmilk Shaken Espresso (line 2) is unavailable: this store is out of brown sugar syrup.
+MO-20250310-0371,STB-10588,2025-03-10T07:16:36-07:00,1,Iced Brown Sugar Oatmilk Shaken Espresso,Venti,oat,brown sugar syrup,1,6.70,mid_order_sellout,true,refused_unavailable,oat milk,Iced Brown Sugar Oatmilk Shaken Espresso (line 1) is unavailable: this store is out of oat milk.
+MO-20250310-0371,STB-10588,2025-03-10T07:16:36-07:00,2,Caffè Latte,Grande,oat,vanilla syrup,1,6.95,mid_order_sellout,true,refused_unavailable,oat milk,Caffè Latte (line 2) is unavailable: this store is out of oat milk.
+MO-20250310-0412,STB-10529,2025-03-10T07:20:04-07:00,1,Caffè Latte,Grande,Oat,,1,6.15,in_stock,false,accepted,,
+MO-20250310-0419,STB-10611,2025-03-10T07:21:48-07:00,1,Caffè Americano,Tall,none,,1,4.45,multi_line_partial,false,refused_unavailable,caramel drizzle,Caramel Macchiato (line 2) is unavailable: this store is out of caramel drizzle.
+MO-20250310-0419,STB-10611,2025-03-10T07:21:48-07:00,2,Caramel Macchiato,Grande,2%,vanilla syrup;caramel drizzle,1,6.05,multi_line_partial,false,refused_unavailable,caramel drizzle,Caramel Macchiato (line 2) is unavailable: this store is out of caramel drizzle.
+MO-20250310-0419,STB-10611,2025-03-10T07:21:48-07:00,3,Cold Brew,Grande,none,,1,5.25,multi_line_partial,false,refused_unavailable,caramel drizzle,Caramel Macchiato (line 2) is unavailable: this store is out of caramel drizzle.
+MO-20250310-0516,STB-10358,2025-03-10T07:31:17-07:00,1,Chai Tea Latte,Grande,2%,,1,5.75,mid_order_sellout,true,refused_unavailable,chai concentrate,Chai Tea Latte (line 1) is unavailable: this store is out of chai concentrate.
+MO-20250310-0553,STB-10342,2025-03-10T07:35:02-07:00,1,Pink Drink,Grande,coconut,,3,17.85,quantity_exceeds_available,false,refused_unavailable,coconut milk,Pink Drink (line 1) is unavailable: this store does not have enough coconut milk for 3 drinks.
+MO-20250310-0601,STB-10466,2025-03-10T07:39:40-07:00,1,White Chocolate Mocha,Grande,2%,white chocolate mocha sauce,1,6.25,add_in_out,false,refused_unavailable,white chocolate mocha sauce,White Chocolate Mocha (line 1) is unavailable: this store is out of white chocolate mocha sauce.
+MO-20250310-0624,STB-10342,2025-03-10T07:41:55-07:00,1,Iced Brown Sugar Oatmilk Shaken Espresso,Grande,oat,brown sugar syrup,1,6.25,base_out,false,refused_unavailable,oat milk,Iced Brown Sugar Oatmilk Shaken Espresso (line 1) is unavailable: this store is out of oat milk.
+MO-20250310-0668,STB-10503,2025-03-10T07:46:23-07:00,1,Pink Drink,Grande,coconut,,1,5.95,in_stock,false,accepted,,
+MO-20250310-0668,STB-10503,2025-03-10T07:46:23-07:00,2,Caffè Mocha,Grande,soy,mocha sauce,1,6.65,in_stock,false,accepted,,
+MO-20250310-0731,STB-10611,2025-03-10T07:52:08-07:00,1,Cold Brew,Grande,none,vanilla sweet cream cold foam,1,6.50,mid_order_sellout,true,refused_unavailable,vanilla sweet cream cold foam,Cold Brew (line 1) is unavailable: this store is out of vanilla sweet cream cold foam.
+MO-20250310-0731,STB-10611,2025-03-10T07:52:08-07:00,2,Iced Chai Tea Latte,Venti,2%,vanilla sweet cream cold foam,1,7.45,mid_order_sellout,true,refused_unavailable,vanilla sweet cream cold foam,Iced Chai Tea Latte (line 2) is unavailable: this store is out of vanilla sweet cream cold foam.
+MO-20250310-0784,STB-10529,2025-03-10T07:57:31-07:00,1,Cold Brew,Grande,none,,1,5.25,base_out,false,refused_unavailable,cold brew,Cold Brew (line 1) is unavailable: this store is out of cold brew.
+MO-20250310-0842,STB-10358,2025-03-10T08:03:14-07:00,1,Iced Matcha Tea Latte,Grande,2%,,2,11.90,quantity_exceeds_available,false,refused_unavailable,matcha,Iced Matcha Tea Latte (line 1) is unavailable: this store does not have enough matcha for 2 drinks.
+MO-20250310-0889,STB-10417,2025-03-10T08:07:49-07:00,1,Caramel Macchiato,Venti,oat,vanilla syrup;caramel drizzle,1,7.25,store_closed,false,refused_unavailable,,Caramel Macchiato (line 1) is unavailable: this store is not taking mobile orders right now.
+MO-20250310-0935,STB-10611,2025-03-10T08:12:26-07:00,1,Iced Matcha Tea Latte,Grande,almond,,1,6.65,in_stock,false,accepted,,
+MO-20250310-0991,STB-10503,2025-03-10T08:17:58-07:00,1,Cold Brew,Grande,none,chocolate cream cold foam,1,6.50,add_in_out,false,refused_unavailable,chocolate cream cold foam,Cold Brew (line 1) is unavailable: this store is out of chocolate cream cold foam.
+MO-20250310-1047,STB-10466,2025-03-10T08:23:40-07:00,1,Iced Caramel Macchiato,Grande,2%,vanilla syrup;caramel drizzle,1,6.05,mid_order_sellout,true,refused_unavailable,vanilla syrup,Iced Caramel Macchiato (line 1) is unavailable: this store is out of vanilla syrup.
+MO-20250310-1093,STB-10529,2025-03-10T08:28:15-07:00,1,Chai Tea Latte,Grande,soy,,2,12.90,quantity_exceeds_available,false,refused_unavailable,soy milk,Chai Tea Latte (line 1) is unavailable: this store does not have enough soy milk for 2 drinks.
+MO-20250310-1149,STB-10588,2025-03-10T08:33:47-07:00,1,Pink Drink,Venti,coconut,,1,6.45,in_stock,false,accepted,,
+MO-20250310-1201,STB-10611,2025-03-10T08:39:02-07:00,1,Pink Drink,Grande,coconut,,1,5.95,base_out,false,refused_unavailable,strawberry açaí base,Pink Drink (line 1) is unavailable: this store is out of strawberry açaí base.
+MO-20250310-1268,STB-10342,2025-03-10T08:45:36-07:00,1,Chai Tea Latte,Grande,2%,,1,5.75,in_stock,false,accepted,,
+MO-20250310-1325,STB-10503,2025-03-10T08:51:19-07:00,1,Caffè Americano,Tall,none,,1,4.45,in_stock,false,accepted,,

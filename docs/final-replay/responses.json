@@ -1,0 +1,618 @@
+[
+  {
+    "order_id": "MO-20250310-0118",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10358 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0118"
+    },
+    "effects": {
+      "order_id": "ee4298e1-a7db-49f1-ba16-0f6cd2a024c3",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0139",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10588 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0139"
+    },
+    "effects": {
+      "order_id": "3ddd5572-4d9d-4a32-a40c-b01c3058b7d9",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0167",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10417 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0167"
+    },
+    "effects": {
+      "order_id": "44fff367-459d-4b25-a1c1-add14e1707a9",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0186",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10466 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0186"
+    },
+    "effects": {
+      "order_id": "3e2902fa-e844-4843-a42b-3ae0205b9c7f",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0209",
+    "http_status": 422,
+    "body": {
+      "error": {
+        "code": "INVALID_ORDER",
+        "message": "Provide a valid store, basket, and idempotency key.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0209"
+    },
+    "effects": {
+      "order_id": "658b7568-3b07-461d-8017-321505b0b055",
+      "status": 422,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0251",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10503 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0251"
+    },
+    "effects": {
+      "order_id": "b5300ca4-c4b9-4c8d-806e-8bdb521e4586",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0302",
+    "http_status": 422,
+    "body": {
+      "error": {
+        "code": "INVALID_ORDER",
+        "message": "Provide a valid store, basket, and idempotency key.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0302"
+    },
+    "effects": {
+      "order_id": "7c699e5c-92f7-4bac-a2fa-8c07669af3e7",
+      "status": 422,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0338",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10529 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0338"
+    },
+    "effects": {
+      "order_id": "aee24f27-6c39-43c3-951d-062598532c8f",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0371",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10588 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0371"
+    },
+    "effects": {
+      "order_id": "92b3fdf1-8c80-4f9b-9cc3-ba6a6579fc0f",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0412",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10529 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0412"
+    },
+    "effects": {
+      "order_id": "4b39d5ee-b1f4-47ea-899b-3613917a036f",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0419",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10611 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0419"
+    },
+    "effects": {
+      "order_id": "366134a0-104a-4d2b-97f0-b634d2af9a12",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0516",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10358 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0516"
+    },
+    "effects": {
+      "order_id": "d875da92-917f-433f-8f76-1c8b47a7dbf7",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0553",
+    "http_status": 422,
+    "body": {
+      "error": {
+        "code": "INVALID_ORDER",
+        "message": "Provide a valid store, basket, and idempotency key.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0553"
+    },
+    "effects": {
+      "order_id": "fc3f2f36-3d40-4f76-b22e-a2821783d768",
+      "status": 422,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0601",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10466 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0601"
+    },
+    "effects": {
+      "order_id": "a94dd05d-c321-4849-bce5-d0d0c309588e",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0624",
+    "http_status": 422,
+    "body": {
+      "error": {
+        "code": "INVALID_ORDER",
+        "message": "Provide a valid store, basket, and idempotency key.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0624"
+    },
+    "effects": {
+      "order_id": "903d364f-4e28-4a2c-931e-6eb7c09c30a6",
+      "status": 422,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0668",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10503 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0668"
+    },
+    "effects": {
+      "order_id": "18a95b88-9173-44d0-94e3-c1507f10f511",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0731",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10611 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0731"
+    },
+    "effects": {
+      "order_id": "572c8b22-61ba-481f-84b4-aa004cbf4992",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0784",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10529 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0784"
+    },
+    "effects": {
+      "order_id": "84449e7c-2baa-45ab-af02-65a688e2a17a",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0842",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10358 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0842"
+    },
+    "effects": {
+      "order_id": "cda04bc1-7e32-4ee6-820f-b7f84efc0762",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0889",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10417 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0889"
+    },
+    "effects": {
+      "order_id": "e83f16c0-fc73-444c-a2cd-0e614930e811",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0935",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10611 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0935"
+    },
+    "effects": {
+      "order_id": "b5a0ce5c-b5af-4d64-b2a4-74920e249e48",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-0991",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10503 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-0991"
+    },
+    "effects": {
+      "order_id": "14fdd80d-368e-4507-a623-8b27899bc3f0",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-1047",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10466 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-1047"
+    },
+    "effects": {
+      "order_id": "51b3cccd-1dd7-42c1-be94-ada58a17c6e1",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-1093",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10529 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-1093"
+    },
+    "effects": {
+      "order_id": "79019641-3d3e-47d1-84ac-3dbe8dc8ae95",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-1149",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10588 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-1149"
+    },
+    "effects": {
+      "order_id": "f183b19f-2b78-479c-9946-c6f2feba0075",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-1201",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10611 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-1201"
+    },
+    "effects": {
+      "order_id": "01b3a2e7-0c72-40c1-be18-1937a4bf8d1c",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-1268",
+    "http_status": 422,
+    "body": {
+      "error": {
+        "code": "INVALID_ORDER",
+        "message": "Provide a valid store, basket, and idempotency key.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-1268"
+    },
+    "effects": {
+      "order_id": "0b1bc915-e0a1-45a9-8e52-d3d6c17c07ac",
+      "status": 422,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  },
+  {
+    "order_id": "MO-20250310-1325",
+    "http_status": 404,
+    "body": {
+      "error": {
+        "code": "STORE_NOT_FOUND",
+        "message": "Store STB-10503 was not found.",
+        "line_item_number": null,
+        "missing_component": null,
+        "details": [],
+        "retryable": false
+      },
+      "request_id": "req-MO-20250310-1325"
+    },
+    "effects": {
+      "order_id": "91a56299-32ba-45db-b47e-6e0c7abee614",
+      "status": 404,
+      "phase": "done",
+      "payment_rows": 0,
+      "outbox_rows": 0
+    }
+  }
+]

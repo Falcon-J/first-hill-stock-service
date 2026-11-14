@@ -1,0 +1,66 @@
+# Isolated test fixture stack; never points at the normal Compose volumes.
+name: first-hill-overselling
+services:
+  stock:
+    build:
+      context: .
+      dockerfile: services/stock/Dockerfile
+    command: [uvicorn, services.stock.app:app, --host, 0.0.0.0, --port, "8000", --workers, "2"]
+    environment:
+      STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Create the local .env first}
+      STOCK_STORAGE_PATH: /state/stock.sqlite
+      ALLOW_TEST_FIXTURES: "1"
+    volumes:
+      - stock_state:/state
+      - ./checks:/checks:ro
+    ports:
+      - 127.0.0.1:18082:8000
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  order:
+    build:
+      context: .
+      dockerfile: services/order/Dockerfile
+    command: [uvicorn, services.order.app:app, --host, 0.0.0.0, --port, "8000", --workers, "2"]
+    environment:
+      ORDER_SERVICE_TOKEN: ${ORDER_SERVICE_TOKEN:?Create the local .env first}
+      STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Create the local .env first}
+      STOCK_URL: http://stock:8000
+      ORDERS_DB: /data/orders.sqlite3
+      PAYMENT_ADAPTER: development
+      ALLOW_TEST_FIXTURES: "1"
+    volumes:
+      - order_state:/data
+      - ./checks:/checks:ro
+    depends_on:
+      stock:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    environment:
+      ORDER_URL: http://order:8000
+      ORDER_SERVICE_TOKEN: ${ORDER_SERVICE_TOKEN:?Create the local .env first}
+      GATEWAY_CUSTOMER_TOKEN: ${GATEWAY_CUSTOMER_TOKEN:?Create the local .env first}
+    ports:
+      - 127.0.0.1:18081:8000
+    depends_on:
+      order:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+volumes:
+  stock_state:
+  order_state:

@@ -1,0 +1,37 @@
+{
+  "resource_title": "Store Stock Snapshot for Final Replay (10 March 2025, 06:45)",
+  "confirmation": "Reopened the named Zero resource and downloaded a fresh copy after feedback",
+  "confirmed_at_utc": "2026-11-14T13:10:23.293801+00:00",
+  "resource_sha256": "651326beceb9273dddd0b993bfd6912574efdc1ea52ea3ab5c67d99afeaffeeb",
+  "loaded_sha256": "651326beceb9273dddd0b993bfd6912574efdc1ea52ea3ab5c67d99afeaffeeb",
+  "byte_identical": true,
+  "resource_store_ids": [
+    "STB-10342",
+    "STB-10518",
+    "STB-10877",
+    "STB-11203",
+    "STB-11456"
+  ],
+  "order_store_ids": [
+    "STB-10342",
+    "STB-10358",
+    "STB-10417",
+    "STB-10466",
+    "STB-10503",
+    "STB-10529",
+    "STB-10588",
+    "STB-10611"
+  ],
+  "missing_stores": [
+    "STB-10358",
+    "STB-10417",
+    "STB-10466",
+    "STB-10503",
+    "STB-10529",
+    "STB-10588",
+    "STB-10611"
+  ],
+  "matching_numeric_suffixes": [
+    "10342"
+  ]
+}

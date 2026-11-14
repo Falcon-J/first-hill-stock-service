@@ -18,6 +18,11 @@ image and its own data ownership. There MUST NOT be a shared service database,
 shared credentials or direct cross-service persistence access. Communication
 MUST use explicit API contracts; stock holds MUST be owned by the stock service.
 These are future implementation constraints, not a claim containers exist now.
+Store stock is the sole authority for quantity_on_hand, reserved_quantity,
+store_open, recipe-based fulfilability and reservations. No other service may
+read replicas/reporting copies or retain stock/open-state caches as truth.
+Confirmation MUST recheck current inventory and hours against POS/feed changes
+before payment; an earlier successful hold/read is not current acceptance proof.
 
 ### III. Contract-first compatibility
 
@@ -26,6 +31,10 @@ implementation. Providers and consumers MUST agree on request/response fields,
 status codes, error codes, units, identifiers and idempotency. Breaking changes
 MUST use a new API version. A service MUST NOT silently reinterpret a store ID,
 replace a requested ingredient or accept a partial basket.
+Public routes MUST use /v1 and retain the legacy error/code/message/request_id
+envelope, with additive machine-readable line/component details. Gateway has
+no order or stock business logic. All synchronous order work shares a 3-second
+deadline; retries cannot reset it. Business refusals MUST NOT use 502/503/504.
 
 ### IV. Tests first; evidence gates merges
 
@@ -86,4 +95,4 @@ or incompatible principles; minor for new principles; patch for clarifications.
 Any exception MUST be explicit, reviewed and recorded with an expiry and owner;
 no exception can permit payment before a confirmed stock reservation.
 
-**Version**: 1.0.4 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
+**Version**: 1.1.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14

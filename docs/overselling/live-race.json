@@ -1,0 +1,129 @@
+{
+  "transport": "real HTTP sockets; isolated Docker Compose",
+  "recorded_at": "2026-11-14T10:33:43.196792+00:00",
+  "fixture_provenance": "Synthetic last oat unit with sufficient espresso; not historical stock.",
+  "results": [
+    {
+      "http_status": 409,
+      "response": {
+        "error": {
+          "code": "STOCK_CHANGED",
+          "message": "Line 1, Grande Iced Brown Sugar Oatmilk Shaken Espresso: Oatmilk is unavailable at this store right now.",
+          "line_item_number": 1,
+          "missing_component": "Oatmilk",
+          "details": [
+            {
+              "code": "STOCK_CHANGED",
+              "line_item_number": 1,
+              "missing_component": "Oatmilk"
+            }
+          ],
+          "retryable": false
+        },
+        "request_id": "req-live-race-0"
+      },
+      "effects": {
+        "order_id": "667c98a2-066a-4278-bd0d-fa97fcf499ab",
+        "status": 409,
+        "phase": "done",
+        "payment_rows": 0,
+        "outbox_rows": 0
+      },
+      "replay_stable": true
+    },
+    {
+      "http_status": 201,
+      "response": {
+        "status": "accepted",
+        "order_id": "363e87bb-28a6-4bc9-b163-09cf0c435464",
+        "store_id": "SB-10482",
+        "queue_spot": 7,
+        "request_id": "req-live-race-1"
+      },
+      "effects": {
+        "order_id": "363e87bb-28a6-4bc9-b163-09cf0c435464",
+        "status": 201,
+        "phase": "done",
+        "payment_rows": 1,
+        "outbox_rows": 1
+      },
+      "replay_stable": true
+    }
+  ],
+  "stock": {
+    "state": {
+      "aliases": {
+        "SB-10482": "10482"
+      },
+      "recipes": {
+        "Iced Brown Sugar Oatmilk Shaken Espresso|Grande|Oatmilk|Brown Sugar Syrup": {
+          "brown_sugar_syrup": 1,
+          "espresso_signature": 1,
+          "oat_milk": 1
+        },
+        "Synthetic competing unit|Grande|None|": {
+          "oat_milk": 1
+        }
+      },
+      "stores": {
+        "10482": {
+          "components": {
+            "brown_sugar_syrup": {
+              "component_name": "Brown Sugar Syrup",
+              "component_type": "add_in",
+              "quantity_on_hand": 63,
+              "reserved_quantity": 2
+            },
+            "espresso_signature": {
+              "component_name": "Signature Espresso Roast",
+              "component_type": "drink_base",
+              "quantity_on_hand": 141,
+              "reserved_quantity": 4
+            },
+            "oat_milk": {
+              "component_name": "Oatmilk",
+              "component_type": "drink_base",
+              "quantity_on_hand": 0,
+              "reserved_quantity": 0
+            }
+          },
+          "store_name": "First Hill",
+          "store_open": true
+        }
+      }
+    },
+    "reservations": [
+      {
+        "allocations": [
+          {
+            "component_id": "brown_sugar_syrup",
+            "line_item_numbers": [
+              1
+            ],
+            "units": 1
+          },
+          {
+            "component_id": "espresso_signature",
+            "line_item_numbers": [
+              1
+            ],
+            "units": 1
+          },
+          {
+            "component_id": "oat_milk",
+            "line_item_numbers": [
+              1
+            ],
+            "units": 1
+          }
+        ],
+        "created_at": "2026-11-14T10:33:31.462072+00:00",
+        "expires_at": "2026-11-14T10:35:31.462072+00:00",
+        "order_id": "363e87bb-28a6-4bc9-b163-09cf0c435464",
+        "reservation_id": "wFoptyFEy1yKS33b7Yduu6x08Mb6wRNH",
+        "status": "confirmed",
+        "store_id": "SB-10482"
+      }
+    ]
+  }
+}

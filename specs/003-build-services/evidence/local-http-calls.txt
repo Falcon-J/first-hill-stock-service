@@ -1,0 +1,2 @@
+stock-1  | INFO:     172.18.0.3:56376 - "POST /v1/reservations HTTP/1.1" 409 Conflict
+order-1    | INFO:     172.18.0.4:53792 - "POST /v1/orders HTTP/1.1" 409 Conflict

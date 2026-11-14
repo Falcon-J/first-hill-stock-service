@@ -1,0 +1,24 @@
+{
+  "source_order_id": "MO-250305-0015",
+  "provenance": "Local Windows replay exceeded gateway deadline, then original-key retry after hold expiry refused safely. Not the passing CI replay.",
+  "initial_status": 504,
+  "retry_status": 409,
+  "retry_response": {
+    "error": {
+      "code": "RESERVATION_EXPIRED",
+      "message": "Your stock reservation expired. Please try again.",
+      "line_item_number": null,
+      "missing_component": null,
+      "details": [],
+      "retryable": false
+    },
+    "request_id": "req-MO-250305-0015"
+  },
+  "effects": {
+    "order_id": "934afc2c-9d3e-4afd-bcad-a59005b60707",
+    "status": 409,
+    "phase": "done",
+    "payment_rows": 0,
+    "outbox_rows": 0
+  }
+}
