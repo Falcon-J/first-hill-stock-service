@@ -1,0 +1,45 @@
+{
+  "observed_at": "2026-11-14T09:08:28.742943+00:00",
+  "source": "Live HTTP request through three Docker Compose containers using the historical snapshot",
+  "request": {
+    "method": "POST",
+    "path": "/v1/orders",
+    "request_id": "demo-firsthill-0f9d9315-2dd7-40bf-8ae5-fe6251a42fbc",
+    "idempotency_key": "demo-firsthill-0f9d9315-2dd7-40bf-8ae5-fe6251a42fbc",
+    "body": {
+      "store_id": "SB-10482",
+      "items": [
+        {
+          "line_item_number": 1,
+          "drink_name": "Caffè Latte",
+          "size": "Grande",
+          "milk": "Oatmilk",
+          "add_ins": [],
+          "quantity": 1
+        }
+      ],
+      "payment_method_token": "development-demo-no-real-payment"
+    }
+  },
+  "response": {
+    "status": 409,
+    "body": {
+      "error": {
+        "code": "BASE_OUT_OF_STOCK",
+        "message": "Line 1, Grande Caffè Latte: Oatmilk is unavailable at this store right now.",
+        "line_item_number": 1,
+        "missing_component": "Oatmilk",
+        "details": [
+          {
+            "code": "BASE_OUT_OF_STOCK",
+            "line_item_number": 1,
+            "missing_component": "Oatmilk"
+          }
+        ],
+        "retryable": false
+      },
+      "request_id": "demo-firsthill-0f9d9315-2dd7-40bf-8ae5-fe6251a42fbc"
+    }
+  },
+  "payment_mode": "Explicit development adapter, no real charges"
+}

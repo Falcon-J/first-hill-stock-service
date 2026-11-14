@@ -13,10 +13,10 @@ Preserve error/code/message/request_id, exact line/component and /v1 paths. Rese
 Uncertain dependency/payment outcomes, same-key retries and changed payloads, owner isolation, expiry and POS updates, and a real HTTP refusal with no payment/queue side effects.
 
 ## Tasks
-- [ ] Guardrails: add tests for Stop hook/gates and no forbidden cross-service imports, see them fail, implement hooks/rules and spec build notes. Run tests and lint.
-- [ ] Stock: run existing stock contract cases red; implement services/stock/app.py factory(initial_state, clock, authenticate), snapshot loader, atomic lifecycle and Dockerfile. Re-run stock cases green.
-- [ ] Order: run existing order contract cases red; implement services/order/app.py factory(stock_client, payment_client, queue, clock, authenticate), durable attempts, HTTP orchestration and Dockerfile. Re-run order cases green.
-- [ ] Gateway: run existing gateway contract cases red; implement services/gateway/app.py factory(order_client, clock, authenticate), routing/deadlines/envelope and Dockerfile. Re-run gateway cases green.
-- [ ] Integration: run all tests unchanged; add real HTTP tests and capture a live First Hill oat refusal and call trace. Review whole implementation, fix material findings, run tests/lint, commit and push the same PR, verify latest-SHA Actions green and submit in Zero.
+- [x] Guardrails: add tests for Stop hook/gates and no forbidden cross-service imports, see them fail, implement hooks/rules and spec build notes. Run tests and lint.
+- [x] Stock: run existing stock contract cases red; implement services/stock/app.py factory(initial_state, clock, authenticate), snapshot loader, atomic lifecycle and Dockerfile. Re-run stock cases green.
+- [x] Order: run existing order contract cases red; implement services/order/app.py factory(stock_client, payment_client, queue, clock, authenticate), durable attempts, HTTP orchestration and Dockerfile. Re-run order cases green.
+- [x] Gateway: run existing gateway contract cases red; implement services/gateway/app.py factory(order_client, clock, authenticate), routing/deadlines/envelope and Dockerfile. Re-run gateway cases green.
+- [x] Integration: run all tests unchanged; add real HTTP tests and capture a live First Hill oat refusal and call trace. Review whole implementation, fix material findings, run tests/lint, commit and push the same PR, verify latest-SHA Actions green and submit in Zero.
 
 User approved the contract design in the preceding stage and explicitly requested its implementation. No new design approval is required.

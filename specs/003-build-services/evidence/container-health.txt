@@ -1,0 +1,3 @@
+gateway running healthy
+order running healthy
+stock running healthy
