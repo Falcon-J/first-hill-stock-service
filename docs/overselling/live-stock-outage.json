@@ -1,0 +1,27 @@
+{
+  "source_order_id": "MO-250303-0002",
+  "source_normal_expected_outcome": "accepted",
+  "criterion": "AC-E2",
+  "provenance": "Separate synthetic outage: isolated stock container stopped before checkout.",
+  "expected_status": 503,
+  "actual_status": 503,
+  "response": {
+    "error": {
+      "code": "STOCK_CHECK_UNAVAILABLE",
+      "message": "We can't confirm this store's stock right now. Please try again.",
+      "line_item_number": null,
+      "missing_component": null,
+      "details": [],
+      "retryable": true
+    },
+    "request_id": "req-live-stock-outage"
+  },
+  "effects": {
+    "order_id": "d946ff84-edce-4054-846c-dca24c5d1ce7",
+    "status": null,
+    "phase": "reserving",
+    "payment_rows": 0,
+    "outbox_rows": 0
+  },
+  "result": "PASS"
+}
