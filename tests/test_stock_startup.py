@@ -81,3 +81,54 @@ def test_wal_busy_retry_stops_at_deadline(monkeypatch):
         module.enable_wal(AlwaysBusy())
     assert len(calls) == 1
     assert sleeps == []
+
+
+def test_seed_busy_cleanup_preserves_other_worker_live_hold(tmp_path, monkeypatch):
+    from test_stock_transactions import STATE, NOW, BASKET
+    connect = sqlite3.connect
+    path = tmp_path / 'shared.sqlite'
+    winner = Inventory(STATE, lambda: NOW, path)
+    status, held = winner.reserve('owner', 'winner', {'order_id': 'winner', 'basket': BASKET}, 'req-win')
+    assert status == 201
+    events = []
+
+    class BusySeed:
+        def __init__(self, connection):
+            self.connection = connection
+
+        def execute(self, statement, *args):
+            if statement == 'PRAGMA journal_mode=WAL':
+                return self.connection.execute('PRAGMA journal_mode')  # Already configured by winner.
+            if statement.startswith('CREATE TABLE'):
+                return self.connection.execute('SELECT 1')  # Schema already exists; isolate seed BEGIN.
+            if statement == 'BEGIN IMMEDIATE':
+                events.append('seed BEGIN busy')
+                error = sqlite3.OperationalError('database is locked')
+                error.sqlite_errorcode = sqlite3.SQLITE_BUSY
+                raise error
+            return self.connection.execute(statement, *args)
+
+        def rollback(self):
+            events.append('rollback second connection')
+            return self.connection.rollback()
+
+        def close(self):
+            events.append('close second connection')
+            self.connection.close()
+
+        def __getattr__(self, name):
+            return getattr(self.connection, name)
+
+    with winner.transaction():
+        with monkeypatch.context() as patch:
+            patch.setattr(sqlite3, 'connect', lambda *a, **kw: BusySeed(connect(*a, **kw)))
+            with pytest.raises(sqlite3.OperationalError, match='locked'):
+                Inventory(STATE, lambda: NOW, path)
+        assert events == ['seed BEGIN busy', 'rollback second connection', 'close second connection']
+        assert winner.connection.in_transaction
+        assert winner.data['reservations'][held['reservation_id']]['public'] == held
+    status, confirmed = winner.transition('owner', 'confirm-winner', held['reservation_id'], 'confirm', 'req-win')
+    assert status == 200 and confirmed['status'] == 'confirmed'
+    restarted = Inventory(STATE, lambda: NOW, path)
+    assert restarted.get('owner', key='winner')[1] == confirmed
+    assert restarted.snapshot('SB-10482')['oat_milk'] == {'quantity_on_hand': 0, 'reserved_quantity': 0}
