@@ -8,6 +8,7 @@ from pathlib import Path
 import secrets
 import sqlite3
 from threading import RLock
+import time
 
 from .catalogue import COMPONENTS, demo_recipe, recipe_key, component_type
 
@@ -30,6 +31,21 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
 
 
+def enable_wal(connection):
+    """Journal-mode changes can return BUSY immediately during worker startup."""
+    deadline = time.monotonic() + 1
+    while True:
+        try:
+            connection.execute('PRAGMA journal_mode=WAL').fetchone()
+            return
+        except sqlite3.OperationalError as error:
+            code = getattr(error, 'sqlite_errorcode', None)
+            if (code is None or code & 0xff not in {sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED}
+                    or time.monotonic() >= deadline):
+                raise
+            time.sleep(.01)
+
+
 class Inventory:
     def __init__(self, initial_state, clock, storage_path=None):
         self.lock, self.clock = RLock(), clock
@@ -39,13 +55,12 @@ class Inventory:
             path = Path(storage_path)
             path.parent.mkdir(parents=True, exist_ok=True)
             self.connection = sqlite3.connect(path, check_same_thread=False, isolation_level=None, timeout=1)
-            self.connection.execute('PRAGMA journal_mode=WAL')
-            self.connection.execute('PRAGMA synchronous=FULL')
-            self.connection.execute('CREATE TABLE IF NOT EXISTS inventory_state (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL)')
-            # Seeding must not overwrite a reservation committed by another worker
-            # between its initial SELECT and our first write.
-            self.connection.execute('BEGIN IMMEDIATE')
             try:
+                enable_wal(self.connection)
+                self.connection.execute('PRAGMA synchronous=FULL')
+                self.connection.execute('CREATE TABLE IF NOT EXISTS inventory_state (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL)')
+                # Seeding must not overwrite another worker's committed reservation.
+                self.connection.execute('BEGIN IMMEDIATE')
                 row = self.connection.execute('SELECT payload FROM inventory_state WHERE id=1').fetchone()
                 if row:
                     self.data = json.loads(row[0])
@@ -53,7 +68,12 @@ class Inventory:
                     self.save()
                 self.connection.commit()
             except BaseException:
-                self.connection.rollback()
+                try:
+                    self.connection.rollback()
+                except sqlite3.Error:
+                    pass  # Preserve the original initialization failure.
+                self.connection.close()
+                self.connection = None
                 raise
 
     def save(self):
