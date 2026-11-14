@@ -59,4 +59,11 @@ before submitting MO-250303-0002's valid basket. It expects 503
 STOCK_CHECK_UNAVAILABLE and zero payment/outbox rows. It is labelled separately
 from the CSV replay: that source order's normal expected outcome stays accepted.
 
+`tests/test_lost_stock_reply.py` separately forwards reserve/confirm requests to
+the real stock app, then drops the successful committed reply in the delivery
+transport. Both cases require first503 with zero payment/queue calls, committed
+state surviving a stock restart, and same-key reconciliation completing once.
+This is a real-provider commit with injected delivery loss, not a claim of a
+socket-level network proxy or an extra source-CSV scenario.
+
 SQLite transaction reference: https://www.sqlite.org/lang_transaction.html .

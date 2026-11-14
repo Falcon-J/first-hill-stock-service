@@ -14,7 +14,7 @@ from the green check alone:
 The first line is the unchanged frozen contract suite; the second is all normal
 repository tests; the third is the real-socket Docker race, complete 40-order
 replay and separate stock-outage control. JUnit has no failures, errors or skips.
-Later evidence-only commits rerun all checks; the PR links its final-SHA runs.
+Later evidence/coverage commits rerun all checks; the PR links its final-SHA runs.
 
 ## Before and after
 
@@ -71,3 +71,18 @@ on an overloaded host.
 
 The stock-container crash/expiry rule is the first paragraph of README.md,
 beside these artifacts, with the exact storage field and implementation location.
+
+## Committed stock, lost reply
+
+Added test_committed_stock_reply_lost_then_same_key_reconciles[reserve|confirm]
+in tests/test_lost_stock_reply.py. The transport first forwards to the real stock
+app and receives its successful committed 201/200, then discards that reply with
+a delivery timeout. Both cases prove first503 with no payment/queue calls,
+owner-persisted reservation/allocation surviving restart, same-key recovery201,
+and one authorization/capture/queue entry despite repeated requests. This is
+real-provider commit coverage with an injected delivery fault, not another CSV
+row or a claim of a socket-level fault proxy. No production fix was needed.
+
+Scoped verification: 2 passed in 5.26s. After adding that coverage, the complete
+normal suite reports 146 passed in 51.75s and Ruff passes. Frozen contracts and
+the three live Docker checks remain unchanged and rerun in final-SHA CI.
