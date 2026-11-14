@@ -40,4 +40,18 @@ The complete corrected local suite subsequently passed **158 tests in 92.83s**, 
 
 ## Stock crash and expiry
 
+## Menu/event follow-up audit
+
+| Changed boundary | Decision | Evidence |
+|---|---|---|
+| Expanded recipes in stock/catalogue.py | FIX | All 40 input lines resolve; stock remains sole recipe owner. Required recipe ingredients are retained even without add-in text. No inventory rows or aliases are invented. Demo units remain explicitly labelled. |
+| Replay stock operator | KEEP | Mounted only in the isolated stock test container, gated by ALLOW_REPLAY_EVENTS. Menu uses stock HTTP; feed uses stock's own transactional method and private database. No order/gateway DB mount, public endpoint, or fixture seeding is added. |
+| Event manifest and runner | FIX | Hash/store/time-bound input, no expected-label inference; missing events, unavailable menu reads and failed update acknowledgement independently fail replay. Tokens are removed from saved menu evidence. |
+| Four synthetic provider sequence tests | KEEP | Real applications execute menu/update/checkout and exact 409/no-payment/no-outbox assertions. Synthetic counts/events are expressly not the held-out result. |
+| Frozen contracts, payment path and merge gates | KEEP | No contract schema, payment implementation, runtime deadline or required check is relaxed. PR remains draft while the actual replay is red. |
+
+See [menu and event evidence](menu-and-events.md) for the exact missing-source request.
+
+### Crash behavior (unchanged)
+
 Before the stock transaction commits, a crash leaves no hold. After commit the private SQLite record retains `inventory_state.payload.reservations[id].public.expires_at`; an unconfirmed hold expires at the original 120-second deadline. Confirmed allocations do not expire during uncertain payment. Order must reconcile the original identity and must not charge on an unconfirmed stock result.

@@ -9,9 +9,11 @@ services:
       STOCK_SERVICE_TOKEN: ${STOCK_SERVICE_TOKEN:?Create the local .env first}
       STOCK_STORAGE_PATH: /state/stock.sqlite
       STOCK_SNAPSHOT_PATH: /source/stock.csv
+      ALLOW_REPLAY_EVENTS: "1"
     volumes:
       - final_stock_state:/state
       - ./docs/final-replay/stock.csv:/source/stock.csv:ro
+      - ./checks/stock_replay_event.py:/checks/stock_replay_event.py:ro
     healthcheck:
       test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
       interval: 3s

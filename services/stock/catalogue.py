@@ -21,9 +21,15 @@ COMPONENTS = {
     'chai_concentrate': ('chai concentrate', 'drink_base'),
     'strawberry_acai_base': ('strawberry açaí base', 'drink_base'),
     'coconut_milk': ('coconut milk', 'drink_base'),
+    'whole_milk': ('whole milk', 'drink_base'),
+    'soy_milk': ('soy milk', 'drink_base'),
+    'classic_syrup': ('classic syrup', 'add_in'),
+    'mocha_sauce': ('mocha sauce', 'add_in'),
+    'white_chocolate_mocha_sauce': ('white chocolate mocha sauce', 'add_in'),
+    'chocolate_cream_cold_foam': ('chocolate cream cold foam', 'add_in'),
 }
 MILKS = {'Oatmilk': 'oat_milk', 'Almondmilk': 'almond_milk', '2% Milk': 'two_pct_milk',
-         'coconut milk': 'coconut_milk'}
+         'coconut milk': 'coconut_milk', 'whole milk': 'whole_milk', 'soy milk': 'soy_milk'}
 ADD_INS = {name: component for component, (name, kind) in COMPONENTS.items() if kind == 'add_in'}
 DRINKS = {
     'Caffè Latte': {'espresso_signature': 1},
@@ -36,11 +42,19 @@ DRINKS = {
     'Caffè Americano': {'espresso_signature': 1},
     'Chai Tea Latte': {'chai_concentrate': 1},
     'Pink Drink': {'strawberry_acai_base': 1, 'coconut_milk': 1},
+    'Cappuccino': {'espresso_signature': 1},
+    'Flat White': {'espresso_signature': 1},
+    'Caramel Macchiato': {'espresso_signature': 1, 'vanilla_syrup': 1, 'caramel_drizzle': 1},
+    'Iced Caramel Macchiato': {'espresso_signature': 1, 'vanilla_syrup': 1, 'caramel_drizzle': 1},
+    'Caffè Mocha': {'espresso_signature': 1, 'mocha_sauce': 1},
+    'White Chocolate Mocha': {'espresso_signature': 1, 'white_chocolate_mocha_sauce': 1},
+    'Iced Chai Tea Latte': {'chai_concentrate': 1},
+    'Iced Matcha Tea Latte': {'matcha_powder': 1},
 }
 SIZES = {'Tall', 'Grande', 'Venti'}
 MILK_SPELLINGS = {**{name.casefold(): component for name, component in MILKS.items()},
                  'oat': 'oat_milk', 'almond': 'almond_milk', '2%': 'two_pct_milk',
-                 'coconut': 'coconut_milk'}
+                 'coconut': 'coconut_milk', 'whole': 'whole_milk', 'soy': 'soy_milk'}
 ADD_IN_SPELLINGS = {name.casefold(): component for name, component in ADD_INS.items()}
 # Explicit semantic names from the supplied stock feed, not inferred ID prefixes.
 FEED_NAMES = {'espresso_signature': {'espresso'}, 'oat_milk': {'oat milk'},
