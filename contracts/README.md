@@ -9,10 +9,11 @@ lifecycle, retries and the 3-second budget. Each OpenAPI file is standalone:
   before payment, release on terminal failure and reconcile uncertain outcomes.
 - gateway.openapi.yaml: /v1 public routing and compatible error pass-through.
 
-The existing snapshot API is not rewritten by this draft. No new service provider
-or expected-answer stub is supplied. The provider tests are deliberately red
-until the next build stage implements the actual contracts. Do not bypass the
-required check with skips, xfail, continue-on-error or a fake success server.
+The build stage now supplies real providers in services/stock, services/order
+and services/gateway. The original snapshot API is retained. The earlier red
+provider tests are now required to pass against those real implementations.
+Do not bypass the required check with skips, xfail, continue-on-error or an
+expected-answer substitute server. See specs/003-build-services/quickstart.md.
 
 ```sh
 python -m pip install -r requirements-contracts.txt
@@ -25,9 +26,8 @@ python -m pytest tests/test_stock.py -q
 compatibility, all 21 sample refusals, numeric rollback baselines and CI settings.
 `test_providers.py` tests real providers: stock lifecycle/race/POS loss/replay,
 all source order refusals without payment, ordering/idempotency and gateway
-pass-through/deadlines. Missing order/gateway providers fail assertions inside
-test bodies; legacy stock returns 404 on missing reservation endpoints. Neither
-condition is a passing reservation implementation.
+pass-through/deadlines. Missing-provider assertions remain as regressions against
+accidentally removing an implementation; no missing provider is accepted as green.
 
 Controlled upstream dependency doubles use httpx.MockTransport. TestClient calls
 the actual target ASGI app in memory. External socket connections are blocked;

@@ -1,0 +1,9 @@
+.git
+.claude
+.env
+.pytest_cache
+__pycache__
+*.pyc
+*.sqlite*
+*.log
+contract-results.xml

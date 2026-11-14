@@ -1,8 +1,9 @@
 # Standing instructions: mobile ordering services
 
 Read `.specify/memory/constitution.md` and `specs/001-order-refusals/spec.md`
-before changing a service. This file governs future implementation; this commit
-adds specifications only and does not claim the order service exists.
+before changing a service. Implement the frozen contracts without deleting,
+skipping or loosening their tests. The build stage implements the previously
+specified providers; evidence must distinguish live runs from designed fixtures.
 
 For the service-boundary draft, read `specs/002-service-contracts/plan.md` and
 the three `contracts/*.openapi.yaml` files. The owning-team review supersedes
@@ -104,6 +105,21 @@ response. Every listed case MUST become a contract test before order-service
 implementation can merge. `scenario-audit.md` records all 40 source outcomes.
 
 ## Implementation guardrails
+
+The configured Stop hook runs `python scripts/stop_gate.py`: full pytest and
+ruff must both pass. Exit 2 blocks finishing when either fails or cannot run.
+Never bypass the hook, replace a provider with expected-answer fixtures, disable
+the required contract-tests check, or report a stale green run. Use the project
+Python environment with requirements-contracts.txt installed. Merge remains
+blocked until the latest PR commit has green contract tests and lint.
+The PreToolUse spec-edit gate rejects edits to specs, contracts, constitution
+and these standing rules while test/lint checks are red. Fix service code first;
+reviewed specification amendments remain possible after green checks.
+
+Order and gateway MUST NOT import stock implementation, read its CSV/state files,
+or connect to its database. Only stock loads the historical snapshot. Runtime
+service credentials are injected; the explicitly configured development payment
+adapter simulates payments and MUST NOT be presented as a real payment provider.
 
 Use Python and FastAPI, one independently built and deployed container per
 service. Write a failing test before implementation. Keep secrets in injected

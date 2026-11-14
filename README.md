@@ -4,6 +4,18 @@ A Python/FastAPI service reading the supplied **Store Stock Snapshot,
 7 March 2025 06:45**: 30 component rows across three Seattle stores.
 This repository contains original code, not a fork.
 
+## Three-service build
+
+The repository now also implements the contracted stock, order and gateway
+services in `services/stock`, `services/order` and `services/gateway`, each with
+its own Dockerfile. Stock owns inventory and atomic reservations; order uses HTTP
+to reserve and confirm before payment; gateway forwards the order decision.
+
+Follow [the Compose quickstart](specs/003-build-services/quickstart.md) to install
+the test/lint dependencies, run all three containers and query First Hill oat
+milk through the gateway. Payment simulation is explicitly enabled only for the
+local demo; no real charges occur. The legacy read-only API below is retained.
+
 ## Rule
 
 `available_quantity = max(0, quantity_on_hand - reserved_quantity)`
@@ -31,7 +43,7 @@ python -m venv .venv
 .venv/Scripts/Activate.ps1
 # macOS/Linux: source .venv/bin/activate
 python -m pip install -r requirements.txt
-python -m pytest -q
+python -m pytest tests/test_stock.py -q
 python -m uvicorn app:app --host 127.0.0.1 --port 8000
 ```
 
@@ -67,6 +79,7 @@ Actual local HTTP responses and verification results are saved in
 
 ## Scope
 
-This is a historical, read-only stock snapshot service, not live store stock.
-It does not reserve quantities, process payments, or accept orders. Preventing
-checkout races requires atomic stock reservations in a future order service.
+`app.py` remains the original read-only snapshot API. The new providers implement
+the separate versioned contracts and reservation/payment sequencing using this
+historical seed, not a live store feed. Stock uses a single worker and explicit
+demo recipes; scaling and further overselling hardening are subsequent work.

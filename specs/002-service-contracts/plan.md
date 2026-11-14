@@ -1,10 +1,12 @@
 # Service boundary and contract plan
 
-Status: DRAFT FOR OWNER REVIEW. Source: Service Boundary Review: Asks from the
+Status: APPROVED CONTRACT DESIGN, implementation tracked in
+specs/003-build-services and docs/superpowers/plans/2026-11-14-build-services.md.
+Source: Service Boundary Review: Asks from the
 Owning Teams, 7 March 2025, read in the Zero task resources on 2026-11-14.
-This PR freezes proposed boundaries and adds executable contract tests. It does
-not implement reservations, ordering or the gateway. Red provider tests are
-intentional until those services exist; collection errors/skips are not accepted.
+The original draft froze boundaries and executable red contract targets. The
+subsequent build stage implements those providers on the same PR; its latest
+checks must now pass. Collection errors and skips are never accepted.
 
 ## Technical context and constitution check
 
@@ -47,6 +49,9 @@ stock copy. It cannot extend a hold/deadline or authorize payment.
 
 Choose a single atomic basket hold, not separate per-ingredient calls. Stock
 checks current store_open and aggregate recipe demand while creating the hold.
+Every active hold counts against available stock: max(0, on-hand minus reserved).
+Check demand and publish the hold in the same inventory transaction. A different
+idempotency key cannot reserve the same last unit while a prior hold is live.
 It returns all holds or none; a losing race leaves syrup reserved 2 and espresso
 reserved 4 in the synthetic AC-R5 fixture and never alters the winner's oat hold.
 No call to payment is permitted until stock confirms the reservation.
